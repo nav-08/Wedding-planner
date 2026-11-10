@@ -3,1322 +3,678 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abhinab & Mamta's Wedding • Guest & Accommodation Planner</title>
-  
+  <title>Abhinab & Mamta | Wedding Guest & Room Planner</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Phosphor Icons CDN -->
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            serif: ['"Cormorant Garamond"', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
-          colors: {
-            royal: {
-              900: '#111827',
-              800: '#1e293b',
-              700: '#334155',
-            },
-            champagne: {
-              50: '#fdfbf7',
-              100: '#f7f2e7',
-              200: '#ece1cb',
-              300: '#dfcda8',
-              400: '#cca96f',
-              500: '#b88a42',
-              600: '#9b6e31',
-            },
-            roseGold: {
-              50: '#fff7f7',
-              100: '#feecec',
-              200: '#fed7d7',
-              500: '#e07a7a',
-              700: '#9b3c3c'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #fbf9f5;
+      background-color: #fbf9f6;
+    }
+    .font-serif-title {
+      font-family: 'Playfair Display', serif;
     }
     .custom-scrollbar::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.03);
+      width: 6px;
+      height: 6px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #dfcda8;
+      background-color: #cbd5e1;
       border-radius: 9999px;
     }
-    .badge-high { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-    .badge-maybe { background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
-    .badge-low { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
   </style>
 </head>
-<body class="text-royal-800 antialiased min-h-screen pb-16">
-
-  <!-- Toast Notification Container -->
-  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- Header Banner -->
-  <header class="bg-gradient-to-r from-royal-900 via-royal-800 to-royal-900 text-white relative shadow-xl overflow-hidden border-b-4 border-champagne-400">
-    <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-champagne-400/10 blur-3xl pointer-events-none"></div>
-    <div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-roseGold-500/10 blur-3xl pointer-events-none"></div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-champagne-400/20 text-champagne-300 text-xs font-medium tracking-widest uppercase mb-2">
-            <i class="ph ph-heart text-champagne-400"></i> Jorhat Celebrations &bull; 17th - 19th
-          </div>
-          <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif tracking-tight text-white font-semibold">
-            Abhinab <span class="text-champagne-300 font-normal">&amp;</span> Mamta
-          </h1>
-          <p class="text-royal-200 text-sm mt-1 flex items-center gap-2">
-            <i class="ph ph-sparkle text-champagne-400"></i> Complete 4-Group Guest Turnout &amp; Hotel Room Allocations
-          </p>
+  <header class="bg-gradient-to-r from-amber-900 via-rose-900 to-amber-950 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="bg-amber-400 text-amber-950 text-xs uppercase px-2.5 py-0.5 rounded-full font-bold tracking-wider">Jorhat Wedding</span>
+          <span id="syncStatus" class="inline-flex items-center gap-1.5 text-xs bg-black/30 border border-white/20 px-3 py-0.5 rounded-full text-amber-200">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            Connecting to Google Sheet...
+          </span>
         </div>
+        <h1 class="text-2xl sm:text-3xl font-serif-title font-bold text-amber-100 tracking-wide mt-1">
+          Abhinab & Mamta's Wedding
+        </h1>
+        <p class="text-xs sm:text-sm text-rose-200">Guest Turnout Forecasting & Room Allocation Dashboard</p>
+      </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-          <button onclick="copySummary()" class="px-4 py-2.5 rounded-xl bg-royal-700/80 hover:bg-royal-700 border border-royal-600/70 text-champagne-200 text-xs sm:text-sm font-medium transition flex items-center gap-2 shadow-sm">
-            <i class="ph ph-copy text-base"></i> Copy Summary
-          </button>
-          <button onclick="openAddGuestModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-champagne-500 to-champagne-400 hover:from-champagne-600 hover:to-champagne-500 text-royal-900 font-semibold text-xs sm:text-sm transition flex items-center gap-2 shadow-md hover:shadow-lg active:scale-95">
-            <i class="ph ph-user-plus text-base"></i> Add Guest
-          </button>
-        </div>
+      <div class="flex items-center gap-2">
+        <button onclick="fetchSheetData()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition flex items-center gap-2 border border-white/20">
+          <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Refresh Sheet
+        </button>
+        <button onclick="openModal()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-amber-950 rounded-lg text-sm font-bold shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-user-plus"></i> Add Guest
+        </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-8">
 
-    <!-- KPI Metric Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <!-- Total Max Headcount -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-champagne-200/80 hover:shadow-md transition">
-        <div class="flex items-center justify-between text-royal-700 mb-3">
-          <span class="text-xs font-semibold uppercase tracking-wider text-royal-700">Max Headcount</span>
-          <div class="w-9 h-9 rounded-xl bg-champagne-50 flex items-center justify-center text-champagne-500">
-            <i class="ph ph-users-three text-xl"></i>
-          </div>
+    <!-- KPI Summary Row -->
+    <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
+        <div class="flex justify-between items-center text-slate-400">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Listed</span>
+          <i class="fa-solid fa-users text-amber-600"></i>
         </div>
-        <div class="flex items-baseline gap-2">
-          <span id="kpi-max-guests" class="text-3xl font-bold font-serif text-royal-900">72</span>
-          <span class="text-xs text-royal-700">Invited</span>
-        </div>
-        <p class="text-xs text-royal-700 mt-2 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-champagne-400"></span> 4 Groups: Mom, Dad, Abhinab, Babli
-        </p>
-      </div>
-
-      <!-- Expected Turnout -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-champagne-200/80 hover:shadow-md transition relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-full blur-xl pointer-events-none"></div>
-        <div class="flex items-center justify-between text-royal-700 mb-3">
-          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-800">Expected Turnout</span>
-          <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-            <i class="ph ph-chart-line-up text-xl"></i>
-          </div>
-        </div>
-        <div class="flex items-baseline gap-2">
-          <span id="kpi-expected-guests" class="text-3xl font-bold font-serif text-emerald-700">~51</span>
-          <span class="text-xs text-royal-700 font-medium">Weighted estimate</span>
-        </div>
-        <p class="text-xs text-royal-700 mt-2">
-          95% High &bull; 50% Maybe &bull; 20% Low
-        </p>
-      </div>
-
-      <!-- Breakdown Counts -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-champagne-200/80 hover:shadow-md transition">
-        <div class="flex items-center justify-between text-royal-700 mb-2">
-          <span class="text-xs font-semibold uppercase tracking-wider text-royal-700">Guest Chances</span>
-          <div class="w-9 h-9 rounded-xl bg-roseGold-50 flex items-center justify-center text-roseGold-700">
-            <i class="ph ph-pie-slice text-xl"></i>
-          </div>
-        </div>
-        <div class="flex items-center gap-1.5 mt-1">
-          <span id="kpi-high-count" class="badge-high text-xs px-2 py-0.5 rounded-lg font-semibold">42 High</span>
-          <span id="kpi-maybe-count" class="badge-maybe text-xs px-2 py-0.5 rounded-lg font-semibold">18 Maybe</span>
-          <span id="kpi-low-count" class="badge-low text-xs px-2 py-0.5 rounded-lg font-semibold">12 Low</span>
-        </div>
-        <p class="text-xs text-royal-700 mt-3" id="kpi-confirmed-ratio">58% high confidence</p>
-      </div>
-
-      <!-- Accommodation Status -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-champagne-200/80 hover:shadow-md transition">
-        <div class="flex items-center justify-between text-royal-700 mb-3">
-          <span class="text-xs font-semibold uppercase tracking-wider text-royal-700">Total Hotel Capacity</span>
-          <div class="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-            <i class="ph ph-bed text-xl"></i>
-          </div>
-        </div>
-        <div class="flex items-baseline gap-2">
-          <span id="kpi-total-capacity" class="text-3xl font-bold font-serif text-royal-900">30</span>
-          <span class="text-xs text-royal-700">Beds across 2 venues</span>
-        </div>
-        <p class="text-xs text-royal-700 mt-2 flex items-center gap-2">
-          <span class="font-medium text-royal-700">Bononi (16)</span> + 
-          <span class="font-medium text-royal-700">Clubway (14)</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Scenario Switcher Bar -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-champagne-200/80 mb-8">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-base font-semibold text-royal-900 flex items-center gap-2">
-            <i class="ph ph-sliders text-champagne-500 text-lg"></i>
-            Attendance Scenario Simulator
-          </h2>
-          <p class="text-xs text-royal-700 mt-0.5">Simulate attendance variations to verify hotel room deficits or surpluses.</p>
-        </div>
-
-        <!-- Scenario Pills -->
-        <div class="flex flex-wrap p-1.5 bg-champagne-100/60 rounded-xl border border-champagne-200/60 gap-1">
-          <button onclick="setScenario('min')" id="btn-scenario-min" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition scenario-btn">
-            High Chance Only (42)
-          </button>
-          <button onclick="setScenario('expected')" id="btn-scenario-expected" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition scenario-btn bg-white text-royal-900 shadow-sm border border-champagne-300">
-            Most Likely (~51)
-          </button>
-          <button onclick="setScenario('max')" id="btn-scenario-max" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition scenario-btn">
-            Max Headcount (72)
-          </button>
+        <div class="mt-2">
+          <span id="statTotal" class="text-3xl font-extrabold text-slate-800">0</span>
+          <span class="text-xs text-slate-400 block mt-0.5">Invited guests</span>
         </div>
       </div>
 
-      <!-- Scenario Result Banner -->
-      <div id="scenario-alert" class="mt-4 p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-amber-50 border-amber-200 text-amber-950">
-        <!-- Injected via JS -->
-      </div>
-    </div>
-
-    <!-- Visual Charts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-      <!-- Attendance Probabilities Doughnut -->
-      <div class="lg:col-span-4 bg-white rounded-2xl p-6 shadow-sm border border-champagne-200/80 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <h2 class="text-base font-semibold text-royal-900 font-serif text-lg">Guest Probability Ratio</h2>
-              <p class="text-xs text-royal-700">Likelihood across all 72 guests</p>
-            </div>
-            <span class="p-2 rounded-lg bg-champagne-50 text-champagne-600">
-              <i class="ph ph-chart-pie-slice text-xl"></i>
-            </span>
-          </div>
-          <div class="relative h-56 w-full flex items-center justify-center">
-            <canvas id="probabilityChart"></canvas>
-          </div>
+      <div class="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm flex flex-col justify-between">
+        <div class="flex justify-between items-center text-emerald-600">
+          <span class="text-xs font-semibold uppercase tracking-wider">High Chance</span>
+          <i class="fa-solid fa-circle-check"></i>
         </div>
-        <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-100 text-center">
-          <div class="p-2 rounded-xl bg-emerald-50/60">
-            <div class="text-[11px] text-emerald-700 font-medium">High (95%)</div>
-            <div id="chart-legend-high" class="text-lg font-bold text-emerald-800">42</div>
-          </div>
-          <div class="p-2 rounded-xl bg-amber-50/60">
-            <div class="text-[11px] text-amber-700 font-medium">Maybe (50%)</div>
-            <div id="chart-legend-maybe" class="text-lg font-bold text-amber-800">18</div>
-          </div>
-          <div class="p-2 rounded-xl bg-rose-50/60">
-            <div class="text-[11px] text-rose-700 font-medium">Low (20%)</div>
-            <div id="chart-legend-low" class="text-lg font-bold text-rose-800">12</div>
-          </div>
+        <div class="mt-2">
+          <span id="statHigh" class="text-3xl font-extrabold text-emerald-600">0</span>
+          <span class="text-xs text-slate-400 block mt-0.5">Confident attendance</span>
         </div>
       </div>
 
-      <!-- Breakdown By Group Bar Chart -->
-      <div class="lg:col-span-4 bg-white rounded-2xl p-6 shadow-sm border border-champagne-200/80 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <h2 class="text-base font-semibold text-royal-900 font-serif text-lg">Guests by Side / Group</h2>
-              <p class="text-xs text-royal-700">Distribution among the 4 parties</p>
-            </div>
-            <span class="p-2 rounded-lg bg-champagne-50 text-champagne-600">
-              <i class="ph ph-chart-bar text-xl"></i>
-            </span>
-          </div>
-          <div class="relative h-56 w-full">
-            <canvas id="groupChart"></canvas>
-          </div>
+      <div class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
+        <div class="flex justify-between items-center text-amber-600">
+          <span class="text-xs font-semibold uppercase tracking-wider">Maybes</span>
+          <i class="fa-solid fa-circle-question"></i>
         </div>
-        <div class="grid grid-cols-4 gap-1 mt-4 pt-4 border-t border-gray-100 text-center text-xs">
-          <div><span class="text-royal-700">Mom</span> <strong class="block text-royal-900" id="group-stat-mom">23</strong></div>
-          <div><span class="text-royal-700">Dad</span> <strong class="block text-royal-900" id="group-stat-dad">16</strong></div>
-          <div><span class="text-royal-700">Abhinab</span> <strong class="block text-royal-900" id="group-stat-abhinab">29</strong></div>
-          <div><span class="text-royal-700">Babli</span> <strong class="block text-royal-900" id="group-stat-babli">4</strong></div>
+        <div class="mt-2">
+          <span id="statMaybe" class="text-3xl font-extrabold text-amber-600">0</span>
+          <span class="text-xs text-slate-400 block mt-0.5">Tentative guests</span>
         </div>
       </div>
 
-      <!-- Hotel Accommodation Capacity vs Attendance -->
-      <div class="lg:col-span-4 bg-white rounded-2xl p-6 shadow-sm border border-champagne-200/80 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <h2 class="text-base font-semibold text-royal-900 font-serif text-lg">Beds vs Attendance</h2>
-              <p class="text-xs text-royal-700">Rooms booked vs guest scenarios</p>
-            </div>
-            <span class="p-2 rounded-lg bg-indigo-50 text-indigo-600">
-              <i class="ph ph-buildings text-xl"></i>
-            </span>
-          </div>
-          <div class="relative h-56 w-full">
-            <canvas id="capacityChart"></canvas>
-          </div>
+      <div class="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm flex flex-col justify-between">
+        <div class="flex justify-between items-center text-rose-500">
+          <span class="text-xs font-semibold uppercase tracking-wider">Low Chance</span>
+          <i class="fa-solid fa-circle-xmark"></i>
         </div>
-        <div class="text-xs text-royal-700 pt-3 border-t border-gray-100 flex items-center justify-between">
-          <span><strong>Bononi:</strong> 16 Beds</span>
-          <span><strong>Clubway:</strong> 14 Beds (7 Rms)</span>
-          <span class="text-royal-900 font-semibold">Total: 30</span>
+        <div class="mt-2">
+          <span id="statLow" class="text-3xl font-extrabold text-rose-500">0</span>
+          <span class="text-xs text-slate-400 block mt-0.5">Unlikely to travel</span>
         </div>
       </div>
-    </div>
 
-    <!-- Main Workspace Tabs: Guests vs Room Planner -->
-    <div class="bg-white rounded-2xl shadow-sm border border-champagne-200/80 overflow-hidden mb-8">
+      <div class="col-span-2 md:col-span-1 bg-gradient-to-br from-amber-600 to-rose-700 text-white p-5 rounded-2xl shadow-md flex flex-col justify-between">
+        <div class="flex justify-between items-center text-amber-200">
+          <span class="text-xs font-semibold uppercase tracking-wider">Expected Turnout</span>
+          <i class="fa-solid fa-calculator"></i>
+        </div>
+        <div class="mt-2">
+          <span id="statForecast" class="text-3xl font-extrabold text-white">0</span>
+          <span class="text-xs text-amber-100/80 block mt-0.5">Weighted statistical est.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Analytics Row -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+        <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-amber-600"></i> Attendance Probability
+        </h3>
+        <div class="relative flex-1 flex items-center justify-center min-h-[200px]">
+          <canvas id="probChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+        <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-chart-simple text-amber-600"></i> Guest Count by Group / Side
+        </h3>
+        <div class="relative flex-1 flex items-center justify-center min-h-[200px]">
+          <canvas id="groupChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+        <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-bed text-amber-600"></i> Capacity vs Turnout Scenarios
+        </h3>
+        <div class="relative flex-1 flex items-center justify-center min-h-[200px]">
+          <canvas id="capacityChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guest Roster & Room Manager Split -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       
-      <!-- Tab Header -->
-      <div class="flex border-b border-champagne-200 px-6 pt-4 gap-6 bg-champagne-50/40">
-        <button onclick="switchTab('roster')" id="tab-btn-roster" class="pb-3 text-sm font-semibold border-b-2 border-champagne-500 text-royal-900 flex items-center gap-2 transition">
-          <i class="ph ph-users text-lg"></i>
-          Guest Roster (<span id="guest-tab-count">72</span>)
-        </button>
-        <button onclick="switchTab('rooms')" id="tab-btn-rooms" class="pb-3 text-sm font-semibold border-b-2 border-transparent text-royal-700 hover:text-royal-900 flex items-center gap-2 transition">
-          <i class="ph ph-bed text-lg"></i>
-          Room Allocator &amp; Hotel Floor Plan
-        </button>
-      </div>
-
-      <!-- TAB 1: GUEST ROSTER -->
-      <div id="tab-content-roster" class="p-6">
-        
-        <!-- Dual Filters: Side/Group Filter and Probability Filter -->
-        <div class="flex flex-col gap-3 mb-6">
-          
-          <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-            <!-- Search Bar -->
-            <div class="relative flex-1 max-w-md">
-              <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-royal-700 text-base"></i>
-              <input 
-                type="text" 
-                id="guestSearchInput" 
-                placeholder="Search guest by name or side..." 
-                oninput="handleSearch(this.value)"
-                class="w-full pl-10 pr-4 py-2 text-sm bg-champagne-50/50 border border-champagne-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-champagne-400 focus:bg-white transition"
-              >
-            </div>
-
-            <!-- Probability Filter Pills -->
-            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-              <span class="text-xs font-semibold text-royal-700 mr-1 hidden sm:inline">Probability:</span>
-              <button onclick="filterProbability('ALL')" id="filter-prob-all" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-royal-800 text-white transition">All</button>
-              <button onclick="filterProbability('HIGH')" id="filter-prob-high" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-emerald-50 hover:text-emerald-700 transition">High</button>
-              <button onclick="filterProbability('MAYBE')" id="filter-prob-maybe" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-amber-50 hover:text-amber-700 transition">Maybe</button>
-              <button onclick="filterProbability('LOW')" id="filter-prob-low" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-rose-50 hover:text-rose-700 transition">Low</button>
-            </div>
+      <!-- Guest Roster (7 cols) -->
+      <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
+        <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Guest Roster</h2>
+            <p class="text-xs text-slate-500">Change chance here or in the sheet to auto-sync</p>
           </div>
-
-          <!-- Group / Side Filters -->
-          <div class="flex items-center gap-1.5 overflow-x-auto pt-2 border-t border-gray-100">
-            <span class="text-xs font-semibold text-royal-700 mr-2">Side / Group:</span>
-            <button onclick="filterGroup('ALL')" id="filter-group-all" class="px-3 py-1 text-xs font-semibold rounded-lg bg-champagne-500 text-white transition">All Sides (72)</button>
-            <button onclick="filterGroup('Mom side')" id="filter-group-mom" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-champagne-100 transition">Mom side (23)</button>
-            <button onclick="filterGroup('Dad side')" id="filter-group-dad" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-champagne-100 transition">Dad side (16)</button>
-            <button onclick="filterGroup('Abhinab side')" id="filter-group-abhinab" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-champagne-100 transition">Abhinab side (29)</button>
-            <button onclick="filterGroup('Babli side')" id="filter-group-babli" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-champagne-100 transition">Babli side (4)</button>
+          <!-- Search Input -->
+          <div class="relative w-full sm:w-56">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+            <input type="text" id="searchInput" oninput="filterRoster()" placeholder="Search guest name..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
           </div>
-
         </div>
 
-        <!-- Guest Cards Grid -->
-        <div id="guestsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
-          <!-- Dynamic Content rendered via renderGuests() -->
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap items-center gap-2 py-3 border-b border-slate-100 text-xs font-semibold">
+          <span class="text-slate-400 mr-1">Group:</span>
+          <button onclick="setGroupFilter('All')" class="group-btn active px-2.5 py-1 rounded-md bg-amber-900 text-white" data-group="All">All</button>
+          <button onclick="setGroupFilter('Mom side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Mom side">Mom side</button>
+          <button onclick="setGroupFilter('Dad side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Dad side">Dad side</button>
+          <button onclick="setGroupFilter('Abhinab side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Abhinab side">Abhinab side</button>
+          <button onclick="setGroupFilter('Babli side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Babli side">Babli side</button>
         </div>
 
-        <!-- Empty State -->
-        <div id="guestEmptyState" class="hidden text-center py-12">
-          <i class="ph ph-user-circle text-4xl text-champagne-400 mb-2"></i>
-          <p class="text-sm font-medium text-royal-700">No guests match your selected filters or search.</p>
+        <div class="flex flex-wrap items-center gap-2 py-3 border-b border-slate-100 text-xs font-semibold">
+          <span class="text-slate-400 mr-1">Chance:</span>
+          <button onclick="setProbFilter('All')" class="prob-btn active px-2.5 py-1 rounded-md bg-slate-800 text-white" data-prob="All">All</button>
+          <button onclick="setProbFilter('High chance')" class="prob-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-prob="High chance">High</button>
+          <button onclick="setProbFilter('Maybe')" class="prob-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-prob="Maybe">Maybe</button>
+          <button onclick="setProbFilter('Low chance')" class="prob-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-prob="Low chance">Low</button>
+        </div>
+
+        <!-- Table Container -->
+        <div class="overflow-y-auto max-h-[500px] custom-scrollbar mt-3">
+          <table class="w-full text-left text-sm">
+            <thead class="sticky top-0 bg-white text-xs uppercase text-slate-400 border-b border-slate-100">
+              <tr>
+                <th class="py-2.5 px-3">Name</th>
+                <th class="py-2.5 px-3">Side</th>
+                <th class="py-2.5 px-3">Probability</th>
+              </tr>
+            </thead>
+            <tbody id="guestTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- TAB 2: ROOM ALLOCATOR & FLOOR PLAN -->
-      <div id="tab-content-rooms" class="hidden p-6">
-        
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-champagne-100">
+      <!-- Room Capacity & Assignments (5 cols) -->
+      <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
+        <div class="flex justify-between items-center pb-4 border-b border-slate-100">
           <div>
-            <h2 class="text-lg font-serif font-semibold text-royal-900">Hotel Accommodation &amp; Room Allocations</h2>
-            <p class="text-xs text-royal-700">Assign priority guests to rooms across Bononi Guest House &amp; Clubway Grand.</p>
+            <h2 class="text-lg font-bold text-slate-900">Hotel Rooms</h2>
+            <p class="text-xs text-slate-500">Bononi Guest House & Clubway Grand</p>
           </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="text-xs text-royal-700 mr-2">Assigned: <strong id="assigned-guest-count" class="text-royal-900 font-semibold">0</strong> / <span id="total-room-capacity-badge">30</span> beds</span>
-            <button onclick="autoAssignHighChance()" class="text-xs font-medium px-3 py-1.5 bg-champagne-100 hover:bg-champagne-200 text-champagne-800 rounded-lg transition flex items-center gap-1.5 shadow-sm">
-              <i class="ph ph-magic-wand"></i> Auto-Fill High Chance
-            </button>
-            <button onclick="clearRoomAssignments()" class="text-xs font-medium px-3 py-1.5 bg-gray-100 hover:bg-rose-50 hover:text-rose-700 text-royal-700 rounded-lg transition">
-              Reset
-            </button>
-          </div>
+          <button onclick="autoAssignHighChance()" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto Assign
+          </button>
         </div>
 
-        <div class="space-y-8">
-          
-          <!-- Section 1: Bononi Guest House (16 Pax) -->
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-amber-600"></span>
-                <h3 class="font-serif text-lg font-bold text-royal-900">Bononi Guest House</h3>
-                <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-medium">Capacity: 16 Pax (7 Rooms/Units)</span>
-              </div>
-              <span id="bononi-occupancy-pill" class="text-xs text-royal-700 font-medium">0 / 16 Filled</span>
-            </div>
-
-            <!-- Bononi Room Grid -->
-            <div id="bononiRoomsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
-          <!-- Section 2: Clubway Grand (7 Executive Rooms ~14 Pax) -->
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-indigo-600"></span>
-                <h3 class="font-serif text-lg font-bold text-royal-900">Clubway Grand</h3>
-                <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-medium">7 Executive Rooms (17-18 &amp; 18-19) &bull; 14 Pax Capacity</span>
-              </div>
-              <span id="clubway-occupancy-pill" class="text-xs text-royal-700 font-medium">0 / 14 Filled</span>
-            </div>
-
-            <!-- Clubway Room Grid -->
-            <div id="clubwayRoomsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
+        <!-- Room Inventory Cards -->
+        <div class="overflow-y-auto max-h-[540px] custom-scrollbar mt-4 space-y-4" id="roomContainer">
+          <!-- Dynamically Populated Rooms -->
         </div>
-
       </div>
 
-    </div>
-
+    </section>
   </main>
 
   <!-- Add Guest Modal -->
-  <div id="addGuestModal" class="fixed inset-0 z-50 hidden bg-royal-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-champagne-200 animate-in fade-in zoom-in duration-150">
-      <div class="flex items-center justify-between pb-3 border-b border-champagne-100 mb-4">
-        <h3 class="font-serif text-xl font-bold text-royal-900">Add Wedding Guest</h3>
-        <button onclick="closeAddGuestModal()" class="text-royal-700 hover:text-royal-900 p-1 rounded-lg">
-          <i class="ph ph-x text-lg"></i>
+  <div id="addModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-amber-100 transform transition-all">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-slate-900">Add New Wedding Guest</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
-      <form id="newGuestForm" onsubmit="saveNewGuest(event)" class="space-y-4">
+      <form id="addGuestForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-royal-700 mb-1">Guest Name / Relation</label>
-          <input 
-            type="text" 
-            id="modalGuestName" 
-            required 
-            placeholder="e.g. Pinku mama or Friend 5" 
-            class="w-full px-3.5 py-2.5 text-sm bg-champagne-50/50 border border-champagne-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-champagne-400 focus:bg-white"
-          >
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guest Name</label>
+          <input type="text" id="modalGuestName" required placeholder="Full Name (e.g., Sourav, Tuku)" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
         </div>
 
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-royal-700 mb-1">Side / Group</label>
-          <select 
-            id="modalGuestGroup" 
-            class="w-full px-3.5 py-2.5 text-sm bg-champagne-50/50 border border-champagne-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-champagne-400 focus:bg-white"
-          >
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Family / Friend Side</label>
+          <select id="modalGuestGroup" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
             <option value="Mom side">Mom side</option>
             <option value="Dad side">Dad side</option>
-            <option value="Abhinab side">Abhinab side</option>
+            <option value="Abhinab side" selected>Abhinab side</option>
             <option value="Babli side">Babli side</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-royal-700 mb-1">Attendance Probability</label>
-          <select 
-            id="modalGuestProb" 
-            class="w-full px-3.5 py-2.5 text-sm bg-champagne-50/50 border border-champagne-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-champagne-400 focus:bg-white"
-          >
-            <option value="HIGH">High Chance (95%)</option>
-            <option value="MAYBE">Maybe (50%)</option>
-            <option value="LOW">Low Chance (20%)</option>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Attendance Probability</label>
+          <select id="modalGuestProb" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <option value="High chance">High chance (95%)</option>
+            <option value="Maybe">Maybe (50%)</option>
+            <option value="Low chance">Low chance (20%)</option>
           </select>
         </div>
 
-        <div class="flex items-center justify-end gap-3 pt-3">
-          <button type="button" onclick="closeAddGuestModal()" class="px-4 py-2 text-xs font-semibold rounded-xl text-royal-700 hover:bg-gray-100 transition">
-            Cancel
-          </button>
-          <button type="submit" class="px-5 py-2 text-xs font-semibold rounded-xl bg-champagne-500 hover:bg-champagne-600 text-white shadow transition">
-            Save Guest
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold transition">Cancel</button>
+          <button type="submit" id="modalSubmitBtn" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-sm font-bold shadow-md transition flex items-center gap-2">
+            <span>Add to Sheet</span>
+            <i class="fa-solid fa-paper-plane text-xs"></i>
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Room Assign Guest Selector Modal -->
-  <div id="assignModal" class="fixed inset-0 z-50 hidden bg-royal-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl border border-champagne-200">
-      <div class="flex items-center justify-between pb-2 border-b border-champagne-100 mb-3">
-        <div>
-          <h3 class="font-serif text-lg font-bold text-royal-900" id="assignModalTitle">Assign Guest</h3>
-          <p class="text-xs text-royal-700" id="assignModalSubtitle">Select an unassigned guest</p>
-        </div>
-        <button onclick="closeAssignModal()" class="text-royal-700 hover:text-royal-900 p-1">
-          <i class="ph ph-x text-lg"></i>
-        </button>
-      </div>
-
-      <div class="max-h-72 overflow-y-auto custom-scrollbar space-y-1.5 pr-1" id="assignGuestOptions">
-        <!-- Rendered via JS -->
-      </div>
-    </div>
-  </div>
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 mt-8">
+    <p>Abhinab & Mamta's Wedding • Jorhat, Assam • Real-time synchronization active with Google Sheets</p>
+  </footer>
 
   <script>
-    /* ====================================================================
-       COMPLETE DATASET: ALL 4 GROUPS (72 GUESTS) & HOTEL ROOMS
-       ==================================================================== */
-    let guests = [
-      // ----------------- 1. MOM SIDE (23 Guests) -----------------
-      { id: 'm1', name: 'Mahi', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm2', name: 'Moha', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm3', name: 'Rit', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm4', name: 'Riya', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm5', name: 'Tutu Aita', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm6', name: 'Momi mahi', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm7', name: 'Mala mahi', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm8', name: 'Bubul moha', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm9', name: "Rish's sister", prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm10', name: 'Papu dada', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm11', name: 'Papu dada wife', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm12', name: 'Friend 1', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm13', name: 'Friend 2', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm14', name: 'Friend 3', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm15', name: 'Friend 4', prob: 'HIGH', group: 'Mom side', room: null },
-      { id: 'm16', name: 'Rish', prob: 'MAYBE', group: 'Mom side', room: null },
-      { id: 'm17', name: 'Usnob dada', prob: 'MAYBE', group: 'Mom side', room: null },
-      { id: 'm18', name: "Usnob's wife", prob: 'MAYBE', group: 'Mom side', room: null },
-      { id: 'm19', name: 'Jaan mama wife', prob: 'MAYBE', group: 'Mom side', room: null },
-      { id: 'm20', name: 'Jaan mama son', prob: 'MAYBE', group: 'Mom side', room: null },
-      { id: 'm21', name: 'Bhai dada', prob: 'LOW', group: 'Mom side', room: null },
-      { id: 'm22', name: 'Ponchi ba', prob: 'LOW', group: 'Mom side', room: null },
-      { id: 'm23', name: 'Ponchi ba husband', prob: 'LOW', group: 'Mom side', room: null },
+    // ==========================================
+    // BACKEND SYNC CONFIGURATION
+    // ==========================================
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby02k1YLMbqjPYI22dob2ZLcAL7dS__pC6tOdIDwn86r9WZBBu9jvyNkeW0g9rIt3lZ/exec";
 
-      // ----------------- 2. DAD SIDE (16 Guests) -----------------
-      { id: 'd1', name: 'Ranu pehi', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd2', name: 'Ranu peha', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd3', name: 'Moina jetia', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd4', name: 'Dhubri dada', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd5', name: 'Duhubri dada wife', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd6', name: 'Dhubri dada daughter', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd7', name: 'Raju khura', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd8', name: 'Khuri', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd9', name: 'Bumon', prob: 'HIGH', group: 'Dad side', room: null },
-      { id: 'd10', name: 'Chirag', prob: 'MAYBE', group: 'Dad side', room: null },
-      { id: 'd11', name: 'Nikita', prob: 'MAYBE', group: 'Dad side', room: null },
-      { id: 'd12', name: 'Maina ba', prob: 'MAYBE', group: 'Dad side', room: null },
-      { id: 'd13', name: 'Maina ba husband', prob: 'MAYBE', group: 'Dad side', room: null },
-      { id: 'd14', name: 'Barasha ba', prob: 'LOW', group: 'Dad side', room: null },
-      { id: 'd15', name: 'Barasha ba husband', prob: 'LOW', group: 'Dad side', room: null },
-      { id: 'd16', name: 'Barasha ba daughter', prob: 'LOW', group: 'Dad side', room: null },
+    // Application State
+    let guests = [];
+    let rooms = [];
+    let selectedGroupFilter = 'All';
+    let selectedProbFilter = 'All';
 
-      // ----------------- 3. ABHINAB SIDE (29 Guests) -----------------
-      { id: 'a1', name: 'Soujanya', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a2', name: 'Abhishek', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a3', name: 'Soujanya sister', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a4', name: "Soujany's bhindo", prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a5', name: "Abhishek's sister 1", prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a6', name: "Abhishek's sister 2", prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a7', name: "Abhishek's bhindo", prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a8', name: 'Dhiraj', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a9', name: 'Rohan', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a10', name: 'Amar', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a11', name: 'Sourav', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a12', name: 'Ayush', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a13', name: 'Sonali', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a14', name: 'Subro', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a15', name: 'Tuku', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a16', name: 'Vasu', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a17', name: 'Gomes', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a18', name: 'Debu', prob: 'HIGH', group: 'Abhinab side', room: null },
-      { id: 'a19', name: 'Abhijit', prob: 'MAYBE', group: 'Abhinab side', room: null },
-      { id: 'a20', name: 'Rupam', prob: 'MAYBE', group: 'Abhinab side', room: null },
-      { id: 'a21', name: 'Debashree', prob: 'MAYBE', group: 'Abhinab side', room: null },
-      { id: 'a22', name: 'Nilutpal', prob: 'MAYBE', group: 'Abhinab side', room: null },
-      { id: 'a23', name: 'Suraj', prob: 'MAYBE', group: 'Abhinab side', room: null },
-      { id: 'a24', name: 'Vasudha', prob: 'MAYBE', group: 'Abhinab side', room: null },
-      { id: 'a25', name: 'Patna', prob: 'LOW', group: 'Abhinab side', room: null },
-      { id: 'a26', name: 'Sonu', prob: 'LOW', group: 'Abhinab side', room: null },
-      { id: 'a27', name: 'Sid', prob: 'LOW', group: 'Abhinab side', room: null },
-      { id: 'a28', name: 'Gitashree', prob: 'LOW', group: 'Abhinab side', room: null },
-      { id: 'a29', name: 'Monish da', prob: 'LOW', group: 'Abhinab side', room: null },
+    // Chart References
+    let probChartRef = null;
+    let groupChartRef = null;
+    let capacityChartRef = null;
 
-      // ----------------- 4. BABLI SIDE (4 Guests) -----------------
-      { id: 'b1', name: 'Bhupali', prob: 'HIGH', group: 'Babli side', room: null },
-      { id: 'b2', name: 'Babli Friend 1', prob: 'MAYBE', group: 'Babli side', room: null },
-      { id: 'b3', name: 'Babli Friend 2', prob: 'MAYBE', group: 'Babli side', room: null },
-      { id: 'b4', name: 'Babli Friend 3', prob: 'LOW', group: 'Babli side', room: null }
+    // Default Fallback Room structure if Sheet2 is not returned
+    const defaultRooms = [
+      { id: "b1", hotel: "Bononi", name: "Room 1", capacity: 1, assigned: [] },
+      { id: "b5", hotel: "Bononi", name: "Room 5", capacity: 2, assigned: [] },
+      { id: "b6", hotel: "Bononi", name: "Room 6", capacity: 3, assigned: [] },
+      { id: "b9", hotel: "Bononi", name: "Room 9", capacity: 2, assigned: [] },
+      { id: "b10", hotel: "Bononi", name: "Room 10", capacity: 1, assigned: [] },
+      { id: "b12", hotel: "Bononi", name: "Room 12", capacity: 2, assigned: [] },
+      { id: "bdorm", hotel: "Bononi", name: "Dormitory bed", capacity: 1, assigned: [] },
+      { id: "b2bhk", hotel: "Bononi", name: "2BHK Unit", capacity: 4, assigned: [] },
+      { id: "c1", hotel: "Clubway Grand", name: "Exec Room 1", capacity: 2, assigned: [] },
+      { id: "c2", hotel: "Clubway Grand", name: "Exec Room 2", capacity: 2, assigned: [] },
+      { id: "c3", hotel: "Clubway Grand", name: "Exec Room 3", capacity: 2, assigned: [] },
+      { id: "c4", hotel: "Clubway Grand", name: "Exec Room 4", capacity: 2, assigned: [] },
+      { id: "c5", hotel: "Clubway Grand", name: "Exec Room 5", capacity: 2, assigned: [] },
+      { id: "c6", hotel: "Clubway Grand", name: "Exec Room 6", capacity: 2, assigned: [] },
+      { id: "c7", hotel: "Clubway Grand", name: "Exec Room 7", capacity: 2, assigned: [] }
     ];
 
-    // Room Accommodations layout (Total 30 beds)
-    const rooms = [
-      // Bononi (16 Pax)
-      { id: 'b_r1', hotel: 'Bononi', name: 'Room 1', cap: 1 },
-      { id: 'b_r5', hotel: 'Bononi', name: 'Room 5', cap: 2 },
-      { id: 'b_r6', hotel: 'Bononi', name: 'Room 6', cap: 3 },
-      { id: 'b_r9', hotel: 'Bononi', name: 'Room 9', cap: 2 },
-      { id: 'b_r10', hotel: 'Bononi', name: 'Room 10', cap: 1 },
-      { id: 'b_r12', hotel: 'Bononi', name: 'Room 12', cap: 2 },
-      { id: 'b_dorm', hotel: 'Bononi', name: 'Dormitory Bed', cap: 1 },
-      { id: 'b_2bhk', hotel: 'Bononi', name: '2BHK Unit', cap: 4 },
+    // ==========================================
+    // INITIALIZATION & LIVE SHEET FETCH
+    // ==========================================
+    window.addEventListener("DOMContentLoaded", () => {
+      rooms = JSON.parse(JSON.stringify(defaultRooms));
+      fetchSheetData();
+    });
 
-      // Clubway Grand (7 Executive Rooms, 14 beds total)
-      { id: 'c_r1', hotel: 'Clubway Grand', name: 'Exec Room 101', cap: 2 },
-      { id: 'c_r2', hotel: 'Clubway Grand', name: 'Exec Room 102', cap: 2 },
-      { id: 'c_r3', hotel: 'Clubway Grand', name: 'Exec Room 103', cap: 2 },
-      { id: 'c_r4', hotel: 'Clubway Grand', name: 'Exec Room 104', cap: 2 },
-      { id: 'c_r5', hotel: 'Clubway Grand', name: 'Exec Room 105', cap: 2 },
-      { id: 'c_r6', hotel: 'Clubway Grand', name: 'Exec Room 106', cap: 2 },
-      { id: 'c_r7', hotel: 'Clubway Grand', name: 'Exec Room 107', cap: 2 }
-    ];
+    async function fetchSheetData() {
+      const syncStatus = document.getElementById("syncStatus");
+      const refreshIcon = document.getElementById("refreshIcon");
+      if (refreshIcon) refreshIcon.classList.add("fa-spin");
 
-    // App state
-    let activeProbFilter = 'ALL';
-    let activeGroupFilter = 'ALL';
-    let searchQuery = '';
-    let currentScenario = 'expected'; // 'min', 'expected', 'max'
-    let currentAssigningRoomId = null;
+      syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Syncing with Sheet...`;
 
-    // Charts references
-    let probChartInstance = null;
-    let groupChartInstance = null;
-    let capChartInstance = null;
+      try {
+        const response = await fetch(APPS_SCRIPT_URL);
+        const data = await response.json();
 
-    // Probability Weights
-    const WEIGHTS = {
-      HIGH: 0.95,
-      MAYBE: 0.50,
-      LOW: 0.20
-    };
+        if (data.status === "success" && data.guests && data.guests.length > 0) {
+          guests = data.guests;
 
-    /* ====================================================================
-       INITIALIZATION
-       ==================================================================== */
-    window.onload = function() {
-      initCharts();
-      updateDashboard();
-    };
+          if (data.rooms && data.rooms.length > 0) {
+            rooms = data.rooms.map(r => ({
+              ...r,
+              assigned: []
+            }));
+          }
 
-    /* ====================================================================
-       CORE DASHBOARD CALCS & UPDATES
-       ==================================================================== */
-    function updateDashboard() {
-      // Counts
-      const totalGuests = guests.length;
-      const highCount = guests.filter(g => g.prob === 'HIGH').length;
-      const maybeCount = guests.filter(g => g.prob === 'MAYBE').length;
-      const lowCount = guests.filter(g => g.prob === 'LOW').length;
+          syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Live Synced`;
+        } else {
+          throw new Error("Invalid response format");
+        }
+      } catch (err) {
+        console.warn("Could not retrieve live data from Google Sheet, checking offline cache.", err);
+        syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-400"></span> Offline Mode`;
+      } finally {
+        if (refreshIcon) refreshIcon.classList.remove("fa-spin");
+        updateAllViews();
+      }
+    }
 
-      // Group Counts
-      const momCount = guests.filter(g => g.group === 'Mom side').length;
-      const dadCount = guests.filter(g => g.group === 'Dad side').length;
-      const abhinabCount = guests.filter(g => g.group === 'Abhinab side').length;
-      const babliCount = guests.filter(g => g.group === 'Babli side').length;
+    // ==========================================
+    // WRITE OPERATIONS TO GOOGLE SHEET
+    // ==========================================
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("modalGuestName").value.trim();
+      const group = document.getElementById("modalGuestGroup").value;
+      const probability = document.getElementById("modalGuestProb").value;
+      const submitBtn = document.getElementById("modalSubmitBtn");
 
-      // Weighted Turnout: (High * 0.95) + (Maybe * 0.50) + (Low * 0.20)
-      const expectedTurnout = (highCount * WEIGHTS.HIGH) + (maybeCount * WEIGHTS.MAYBE) + (lowCount * WEIGHTS.LOW);
-      const roundedExpected = Math.round(expectedTurnout * 10) / 10;
-      const expectedInt = Math.round(roundedExpected);
+      if (!name) return;
 
-      // Total Capacities
-      const bononiCap = rooms.filter(r => r.hotel === 'Bononi').reduce((acc, r) => acc + r.cap, 0);
-      const clubwayCap = rooms.filter(r => r.hotel === 'Clubway Grand').reduce((acc, r) => acc + r.cap, 0);
-      const totalHotelCap = bononiCap + clubwayCap;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
 
-      // Update KPI DOM
-      document.getElementById('kpi-max-guests').textContent = totalGuests;
-      document.getElementById('kpi-expected-guests').textContent = `~${expectedInt}`;
-      document.getElementById('kpi-high-count').textContent = `${highCount} High`;
-      document.getElementById('kpi-maybe-count').textContent = `${maybeCount} Maybe`;
-      document.getElementById('kpi-low-count').textContent = `${lowCount} Low`;
-      
-      const highRatio = totalGuests > 0 ? Math.round((highCount / totalGuests) * 100) : 0;
-      document.getElementById('kpi-confirmed-ratio').textContent = `${highRatio}% high confidence level`;
-      document.getElementById('kpi-total-capacity').textContent = totalHotelCap;
-      document.getElementById('guest-tab-count').textContent = totalGuests;
+      // 1. Optimistic UI update
+      const newGuest = {
+        id: "local_" + Date.now(),
+        name: name,
+        group: group,
+        probability: probability
+      };
+      guests.push(newGuest);
+      updateAllViews();
+      closeModal();
 
-      // Group Stats DOM
-      document.getElementById('group-stat-mom').textContent = momCount;
-      document.getElementById('group-stat-dad').textContent = dadCount;
-      document.getElementById('group-stat-abhinab').textContent = abhinabCount;
-      document.getElementById('group-stat-babli').textContent = babliCount;
+      // 2. Transmit to Google Apps Script
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "ADD_GUEST",
+            name: name,
+            group: group,
+            probability: probability
+          })
+        });
+      } catch (err) {
+        console.error("Failed to append to Google Sheet:", err);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Add to Sheet</span> <i class="fa-solid fa-paper-plane text-xs"></i>`;
+        document.getElementById("addGuestForm").reset();
+      }
+    }
 
-      // Update Filter group counts in buttons
-      document.getElementById('filter-group-all').textContent = `All Sides (${totalGuests})`;
-      document.getElementById('filter-group-mom').textContent = `Mom side (${momCount})`;
-      document.getElementById('filter-group-dad').textContent = `Dad side (${dadCount})`;
-      document.getElementById('filter-group-abhinab').textContent = `Abhinab side (${abhinabCount})`;
-      document.getElementById('filter-group-babli').textContent = `Babli side (${babliCount})`;
+    async function changeGuestProbability(name, newProb) {
+      const g = guests.find(item => item.name === name);
+      if (g) {
+        g.probability = newProb;
+        updateAllViews();
 
-      // Update Chart Legends
-      document.getElementById('chart-legend-high').textContent = highCount;
-      document.getElementById('chart-legend-maybe').textContent = maybeCount;
-      document.getElementById('chart-legend-low').textContent = lowCount;
+        try {
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "UPDATE_PROBABILITY",
+              name: name,
+              probability: newProb
+            })
+          });
+        } catch (err) {
+          console.error("Failed to update probability in Sheet:", err);
+        }
+      }
+    }
 
-      // Update Scenario Alert
-      updateScenarioBanner(highCount, expectedInt, totalGuests, totalHotelCap);
-
-      // Refresh Charts
-      updateCharts(highCount, maybeCount, lowCount, momCount, dadCount, abhinabCount, babliCount, totalHotelCap, highCount, expectedInt, totalGuests);
-
-      // Render Roster & Rooms
-      renderGuests();
+    // ==========================================
+    // UI RENDERING & CHARTS
+    // ==========================================
+    function updateAllViews() {
+      renderKPIs();
+      renderCharts();
+      renderGuestTable();
       renderRooms();
     }
 
-    /* ====================================================================
-       SCENARIO SIMULATOR LOGIC
-       ==================================================================== */
-    function setScenario(scenarioKey) {
-      currentScenario = scenarioKey;
-      
-      // Update toggle buttons styling
-      const btns = document.querySelectorAll('.scenario-btn');
-      btns.forEach(btn => {
-        btn.classList.remove('bg-white', 'text-royal-900', 'shadow-sm', 'border', 'border-champagne-300', 'font-semibold');
-        btn.classList.add('font-medium', 'text-royal-700');
-      });
+    function renderKPIs() {
+      const total = guests.length;
+      const high = guests.filter(g => g.probability.toLowerCase().includes("high")).length;
+      const maybe = guests.filter(g => g.probability.toLowerCase().includes("maybe")).length;
+      const low = guests.filter(g => g.probability.toLowerCase().includes("low")).length;
+      const forecast = Math.round((high * 0.95) + (maybe * 0.50) + (low * 0.20));
 
-      const activeBtn = document.getElementById(`btn-scenario-${scenarioKey}`);
-      if (activeBtn) {
-        activeBtn.classList.add('bg-white', 'text-royal-900', 'shadow-sm', 'border', 'border-champagne-300', 'font-semibold');
-        activeBtn.classList.remove('font-medium', 'text-royal-700');
-      }
-
-      updateDashboard();
+      document.getElementById("statTotal").innerText = total;
+      document.getElementById("statHigh").innerText = high;
+      document.getElementById("statMaybe").innerText = maybe;
+      document.getElementById("statLow").innerText = low;
+      document.getElementById("statForecast").innerText = forecast;
     }
 
-    function updateScenarioBanner(highCount, expectedVal, totalGuests, totalCap) {
-      const banner = document.getElementById('scenario-alert');
-      let headcount = 0;
-      let label = '';
-      let notes = '';
+    function renderCharts() {
+      const high = guests.filter(g => g.probability.toLowerCase().includes("high")).length;
+      const maybe = guests.filter(g => g.probability.toLowerCase().includes("maybe")).length;
+      const low = guests.filter(g => g.probability.toLowerCase().includes("low")).length;
 
-      if (currentScenario === 'min') {
-        headcount = highCount;
-        label = `Scenario: High Chance Only (~${headcount} Guests)`;
-        const deficit = headcount - totalCap;
-        notes = deficit > 0
-          ? `Current hotel rooms (30 beds) cover 30 guests. You will need <strong>${deficit} additional beds</strong> for local accommodation if local houses aren't used.`
-          : `All ${headcount} high-chance guests fit inside the current ${totalCap} beds.`;
-      } else if (currentScenario === 'expected') {
-        headcount = expectedVal;
-        label = `Scenario: Most Likely Turnout (~${headcount} Guests)`;
-        const deficit = headcount - totalCap;
-        notes = `With ~${headcount} expected guests, 30 are covered by Bononi & Clubway Grand. <strong>~${deficit} guests</strong> will need local home stay arrangements or additional hotel rooms.`;
-      } else {
-        headcount = totalGuests;
-        label = `Scenario: 100% Maximum Guest Turnout (${headcount} Guests)`;
-        const deficit = headcount - totalCap;
-        notes = `If every single guest attends (${headcount} guests), there is an accommodation shortfall of <strong>${deficit} beds</strong> beyond the 30 booked hotel spots.`;
-      }
-
-      const isCovered = headcount <= totalCap;
-
-      banner.className = `mt-4 p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
-        isCovered ? 'bg-emerald-50 border-emerald-200 text-emerald-950' : 'bg-amber-50/90 border-amber-200 text-amber-950'
-      }`;
-
-      banner.innerHTML = `
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-full ${isCovered ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'} flex items-center justify-center shrink-0 mt-0.5">
-            <i class="ph ${isCovered ? 'ph-check-circle' : 'ph-info'} text-xl"></i>
-          </div>
-          <div>
-            <div class="text-sm font-semibold">${label}</div>
-            <div class="text-xs text-royal-700 mt-0.5 leading-relaxed">${notes}</div>
-          </div>
-        </div>
-        <div class="text-xs font-semibold px-3 py-1.5 rounded-lg shrink-0 ${isCovered ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}">
-          ${isCovered ? '✓ 100% Rooms Available' : `Deficit: ${headcount - totalCap} Beds`}
-        </div>
-      `;
-    }
-
-    /* ====================================================================
-       CHARTS (CHART.JS)
-       ==================================================================== */
-    function initCharts() {
       // 1. Doughnut Chart: Probabilities
-      const ctxProb = document.getElementById('probabilityChart').getContext('2d');
-      probChartInstance = new Chart(ctxProb, {
-        type: 'doughnut',
+      const ctxProb = document.getElementById("probChart").getContext("2d");
+      if (probChartRef) probChartRef.destroy();
+      probChartRef = new Chart(ctxProb, {
+        type: "doughnut",
         data: {
-          labels: ['High Chance (95%)', 'Maybe (50%)', 'Low Chance (20%)'],
+          labels: ["High Chance", "Maybe", "Low Chance"],
           datasets: [{
-            data: [42, 18, 12],
-            backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
-            borderColor: '#ffffff',
+            data: [high, maybe, low],
+            backgroundColor: ["#10b981", "#f59e0b", "#f43f5e"],
             borderWidth: 2,
-            hoverOffset: 4
+            borderColor: "#ffffff"
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function(ctx) {
-                  return ` ${ctx.label}: ${ctx.raw} guests`;
-                }
-              }
-            }
-          },
-          cutout: '70%'
+          plugins: { legend: { position: "bottom" } }
         }
       });
 
-      // 2. Bar Chart: Breakdown by Side
-      const ctxGroup = document.getElementById('groupChart').getContext('2d');
-      groupChartInstance = new Chart(ctxGroup, {
-        type: 'bar',
+      // 2. Bar Chart: Groups
+      const mom = guests.filter(g => g.group.toLowerCase().includes("mom")).length;
+      const dad = guests.filter(g => g.group.toLowerCase().includes("dad")).length;
+      const abhinab = guests.filter(g => g.group.toLowerCase().includes("abhinab")).length;
+      const babli = guests.filter(g => g.group.toLowerCase().includes("babli")).length;
+
+      const ctxGroup = document.getElementById("groupChart").getContext("2d");
+      if (groupChartRef) groupChartRef.destroy();
+      groupChartRef = new Chart(ctxGroup, {
+        type: "bar",
         data: {
-          labels: ['Mom', 'Dad', 'Abhinab', 'Babli'],
+          labels: ["Mom's", "Dad's", "Abhinab's", "Babli's"],
           datasets: [{
-            label: 'Guests',
-            data: [23, 16, 29, 4],
-            backgroundColor: ['#b88a42', '#334155', '#6366f1', '#ec4899'],
+            label: "Guests",
+            data: [mom, dad, abhinab, babli],
+            backgroundColor: ["#8b5cf6", "#3b82f6", "#d97706", "#ec4899"],
             borderRadius: 6
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, ticks: { stepSize: 5 } },
-            x: { grid: { display: false } }
-          },
-          plugins: { legend: { display: false } }
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
         }
       });
 
-      // 3. Comparison Chart: Capacity vs Attendance Scenarios
-      const ctxCap = document.getElementById('capacityChart').getContext('2d');
-      capChartInstance = new Chart(ctxCap, {
-        type: 'bar',
+      // 3. Bar Chart: Capacity vs Turnout
+      const totalBeds = rooms.reduce((sum, r) => sum + r.capacity, 0);
+      const forecast = Math.round((high * 0.95) + (maybe * 0.50) + (low * 0.20));
+
+      const ctxCap = document.getElementById("capacityChart").getContext("2d");
+      if (capacityChartRef) capacityChartRef.destroy();
+      capacityChartRef = new Chart(ctxCap, {
+        type: "bar",
         data: {
-          labels: ['Rooms Booked', 'High Only', 'Expected', 'Max All'],
+          labels: ["Booked Beds", "High Only", "Expected", "Max (All)"],
           datasets: [{
-            label: 'Count',
-            data: [30, 42, 51, 72],
-            backgroundColor: ['#cca96f', '#10b981', '#3b82f6', '#f43f5e'],
+            data: [totalBeds, high, forecast, guests.length],
+            backgroundColor: ["#0284c7", "#10b981", "#7c3aed", "#e11d48"],
             borderRadius: 6
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, ticks: { stepSize: 15 } },
-            x: { grid: { display: false } }
-          },
-          plugins: { legend: { display: false } }
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
         }
       });
     }
 
-    function updateCharts(high, maybe, low, mom, dad, abhinab, babli, totalCap, highTurnout, expTurnout, maxTurnout) {
-      if (probChartInstance) {
-        probChartInstance.data.datasets[0].data = [high, maybe, low];
-        probChartInstance.update();
-      }
-
-      if (groupChartInstance) {
-        groupChartInstance.data.datasets[0].data = [mom, dad, abhinab, babli];
-        groupChartInstance.update();
-      }
-
-      if (capChartInstance) {
-        capChartInstance.data.datasets[0].data = [totalCap, highTurnout, expTurnout, maxTurnout];
-        capChartInstance.update();
-      }
-    }
-
-    /* ====================================================================
-       GUEST ROSTER RENDERING & FILTERING
-       ==================================================================== */
-    function filterProbability(filter) {
-      activeProbFilter = filter;
-      ['all', 'high', 'maybe', 'low'].forEach(f => {
-        const btn = document.getElementById(`filter-prob-${f}`);
-        if (f.toUpperCase() === filter) {
-          btn.className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-royal-800 text-white transition";
-        } else {
-          btn.className = "px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-gray-200 transition";
-        }
-      });
-      renderGuests();
-    }
-
-    function filterGroup(group) {
-      activeGroupFilter = group;
-      const mapping = {
-        'ALL': 'filter-group-all',
-        'Mom side': 'filter-group-mom',
-        'Dad side': 'filter-group-dad',
-        'Abhinab side': 'filter-group-abhinab',
-        'Babli side': 'filter-group-babli'
-      };
-
-      Object.keys(mapping).forEach(key => {
-        const btn = document.getElementById(mapping[key]);
-        if (key === group) {
-          btn.className = "px-3 py-1 text-xs font-semibold rounded-lg bg-champagne-500 text-white transition";
-        } else {
-          btn.className = "px-3 py-1 text-xs font-medium rounded-lg bg-gray-100 text-royal-700 hover:bg-champagne-100 transition";
-        }
-      });
-      renderGuests();
-    }
-
-    function handleSearch(val) {
-      searchQuery = val.toLowerCase().trim();
-      renderGuests();
-    }
-
-    function renderGuests() {
-      const container = document.getElementById('guestsGrid');
-      const emptyState = document.getElementById('guestEmptyState');
-      container.innerHTML = '';
+    function renderGuestTable() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const tbody = document.getElementById("guestTableBody");
+      tbody.innerHTML = "";
 
       const filtered = guests.filter(g => {
-        const matchesProb = (activeProbFilter === 'ALL') || (g.prob === activeProbFilter);
-        const matchesGroup = (activeGroupFilter === 'ALL') || (g.group === activeGroupFilter);
-        const matchesSearch = !searchQuery || 
-          g.name.toLowerCase().includes(searchQuery) || 
-          g.group.toLowerCase().includes(searchQuery);
-        return matchesProb && matchesGroup && matchesSearch;
+        const matchesSearch = g.name.toLowerCase().includes(search);
+        const matchesGroup = (selectedGroupFilter === 'All') || (g.group.toLowerCase() === selectedGroupFilter.toLowerCase());
+        const matchesProb = (selectedProbFilter === 'All') || (g.probability.toLowerCase() === selectedProbFilter.toLowerCase());
+        return matchesSearch && matchesGroup && matchesProb;
       });
 
       if (filtered.length === 0) {
-        emptyState.classList.remove('hidden');
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 text-slate-400 text-xs">No guests found matching filters.</td></tr>`;
         return;
-      } else {
-        emptyState.classList.add('hidden');
       }
 
-      filtered.forEach(guest => {
-        let badgeClass = 'badge-high';
-        let badgeText = 'High (95%)';
-        if (guest.prob === 'MAYBE') {
-          badgeClass = 'badge-maybe';
-          badgeText = 'Maybe (50%)';
-        } else if (guest.prob === 'LOW') {
-          badgeClass = 'badge-low';
-          badgeText = 'Low (20%)';
-        }
+      filtered.forEach(g => {
+        let badgeClass = "bg-slate-100 text-slate-700";
+        if (g.probability.toLowerCase().includes("high")) badgeClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+        else if (g.probability.toLowerCase().includes("maybe")) badgeClass = "bg-amber-50 text-amber-700 border border-amber-200";
+        else if (g.probability.toLowerCase().includes("low")) badgeClass = "bg-rose-50 text-rose-700 border border-rose-200";
 
-        const roomObj = rooms.find(r => r.id === guest.room);
-        const roomBadge = roomObj 
-          ? `<span class="inline-flex items-center gap-1 text-[11px] font-medium text-royal-700 bg-champagne-100 px-2 py-0.5 rounded-md">
-               <i class="ph ph-bed"></i> ${roomObj.hotel} - ${roomObj.name}
-             </span>`
-          : `<span class="text-[11px] text-royal-700 italic">No room allocated</span>`;
-
-        const card = document.createElement('div');
-        card.className = "bg-white border border-champagne-200/90 rounded-xl p-3.5 hover:shadow-md transition flex flex-col justify-between";
-        card.innerHTML = `
-          <div>
-            <div class="flex items-start justify-between gap-2 mb-1.5">
-              <h4 class="font-semibold text-royal-900 text-sm tracking-tight truncate">${guest.name}</h4>
-              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${badgeClass} shrink-0">${badgeText}</span>
-            </div>
-            <div class="text-[11px] text-royal-700 mb-2 flex items-center gap-1">
-              <i class="ph ph-users text-champagne-500"></i> ${guest.group}
-            </div>
-            <div class="mb-3">
-              ${roomBadge}
-            </div>
-          </div>
-
-          <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
-            <select onchange="updateGuestProbability('${guest.id}', this.value)" class="text-[11px] bg-champagne-50/70 border border-champagne-200 rounded-lg px-1.5 py-1 text-royal-700 focus:outline-none focus:ring-1 focus:ring-champagne-400">
-              <option value="HIGH" ${guest.prob === 'HIGH' ? 'selected' : ''}>High Chance</option>
-              <option value="MAYBE" ${guest.prob === 'MAYBE' ? 'selected' : ''}>Maybe</option>
-              <option value="LOW" ${guest.prob === 'LOW' ? 'selected' : ''}>Low Chance</option>
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50/70 transition";
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-semibold text-slate-800">${g.name}</td>
+          <td class="py-2.5 px-3 text-xs text-slate-500">${g.group}</td>
+          <td class="py-2.5 px-3">
+            <select onchange="changeGuestProbability('${g.name}', this.value)" class="text-xs font-semibold px-2 py-1 rounded-md ${badgeClass} cursor-pointer focus:outline-none">
+              <option value="High chance" ${g.probability.toLowerCase().includes("high") ? "selected" : ""}>High chance</option>
+              <option value="Maybe" ${g.probability.toLowerCase().includes("maybe") ? "selected" : ""}>Maybe</option>
+              <option value="Low chance" ${g.probability.toLowerCase().includes("low") ? "selected" : ""}>Low chance</option>
             </select>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-            <button onclick="removeGuest('${guest.id}')" title="Delete Guest" class="text-royal-700 hover:text-rose-600 p-1 rounded transition">
-              <i class="ph ph-trash text-sm"></i>
-            </button>
+    function renderRooms() {
+      const container = document.getElementById("roomContainer");
+      container.innerHTML = "";
+
+      rooms.forEach((r, idx) => {
+        const assignedCount = r.assigned.length;
+        const isFull = assignedCount >= r.capacity;
+
+        const card = document.createElement("div");
+        card.className = `p-4 rounded-xl border ${isFull ? 'bg-slate-50/70 border-slate-200' : 'bg-white border-amber-100 shadow-sm'}`;
+        card.innerHTML = `
+          <div class="flex justify-between items-center mb-2">
+            <div>
+              <span class="text-xs font-semibold uppercase text-amber-700">${r.hotel}</span>
+              <h4 class="font-bold text-slate-800 text-sm">${r.name}</h4>
+            </div>
+            <span class="text-xs font-extrabold px-2 py-0.5 rounded-full ${isFull ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+              ${assignedCount} / ${r.capacity} Beds
+            </span>
+          </div>
+          <div class="flex flex-wrap gap-1.5 mt-2 min-h-[28px]">
+            ${r.assigned.map((guestName, gIdx) => `
+              <span class="inline-flex items-center gap-1 text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
+                ${guestName}
+                <button onclick="removeGuestFromRoom(${idx}, ${gIdx})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-xmark"></i></button>
+              </span>
+            `).join('')}
+            ${!isFull ? `
+              <select onchange="assignGuestToRoom(${idx}, this.value); this.value='';" class="text-xs bg-slate-50 border border-dashed border-slate-300 text-slate-500 rounded px-2 py-0.5 focus:outline-none">
+                <option value="">+ Assign Guest</option>
+                ${guests.filter(g => !isGuestAssigned(g.name)).map(g => `<option value="${g.name}">${g.name} (${g.probability})</option>`).join('')}
+              </select>
+            ` : ''}
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    function updateGuestProbability(id, newProb) {
-      const g = guests.find(item => item.id === id);
-      if (g) {
-        g.prob = newProb;
-        updateDashboard();
-        showToast(`Updated ${g.name} probability to ${newProb}.`);
+    function isGuestAssigned(name) {
+      return rooms.some(r => r.assigned.includes(name));
+    }
+
+    function assignGuestToRoom(roomIdx, guestName) {
+      if (!guestName) return;
+      if (rooms[roomIdx].assigned.length < rooms[roomIdx].capacity) {
+        rooms[roomIdx].assigned.push(guestName);
+        renderRooms();
       }
     }
 
-    function removeGuest(id) {
-      const g = guests.find(item => item.id === id);
-      if (!g) return;
-      guests = guests.filter(item => item.id !== id);
-      updateDashboard();
-      showToast(`Removed ${g.name} from guest roster.`);
-    }
-
-    /* ====================================================================
-       ROOM ALLOCATION LOGIC & RENDERING
-       ==================================================================== */
-    function renderRooms() {
-      const bononiContainer = document.getElementById('bononiRoomsGrid');
-      const clubwayContainer = document.getElementById('clubwayRoomsGrid');
-      
-      bononiContainer.innerHTML = '';
-      clubwayContainer.innerHTML = '';
-
-      let totalAssigned = 0;
-      let bononiAssigned = 0;
-      let clubwayAssigned = 0;
-
-      rooms.forEach(room => {
-        const assignedGuests = guests.filter(g => g.room === room.id);
-        const count = assignedGuests.length;
-        totalAssigned += count;
-        if (room.hotel === 'Bononi') bononiAssigned += count;
-        if (room.hotel === 'Clubway Grand') clubwayAssigned += count;
-
-        const isFull = count >= room.cap;
-
-        const card = document.createElement('div');
-        card.className = `p-4 rounded-xl border transition ${
-          isFull ? 'bg-gray-50/80 border-gray-200' : 'bg-white border-champagne-200 hover:border-champagne-400 shadow-sm'
-        }`;
-
-        let guestsHTML = assignedGuests.map(g => `
-          <div class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-champagne-100/60 mb-1 border border-champagne-200/50">
-            <span class="font-medium text-royal-900 truncate">${g.name} <span class="text-[10px] text-royal-700 font-normal">(${g.group})</span></span>
-            <button onclick="unassignGuest('${g.id}')" class="text-royal-700 hover:text-rose-600 text-[11px]" title="Remove from room">
-              <i class="ph ph-x"></i>
-            </button>
-          </div>
-        `).join('');
-
-        if (assignedGuests.length === 0) {
-          guestsHTML = `<p class="text-xs text-royal-700 italic py-1">No guests assigned yet</p>`;
-        }
-
-        card.innerHTML = `
-          <div class="flex items-center justify-between mb-2">
-            <div>
-              <span class="font-serif font-bold text-royal-900 text-sm">${room.name}</span>
-              <span class="text-[11px] text-royal-700 block">${room.hotel}</span>
-            </div>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-md ${
-              isFull ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-            }">
-              ${count} / ${room.cap}
-            </span>
-          </div>
-
-          <div class="my-2.5 min-h-[44px]">
-            ${guestsHTML}
-          </div>
-
-          <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
-            <button 
-              onclick="openAssignModal('${room.id}')" 
-              ${isFull ? 'disabled' : ''} 
-              class="w-full text-xs font-medium py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition ${
-                isFull 
-                  ? 'bg-gray-100 text-royal-700 cursor-not-allowed' 
-                  : 'bg-champagne-100 hover:bg-champagne-200 text-royal-800'
-              }">
-              <i class="ph ph-plus"></i> ${isFull ? 'Room Full' : 'Assign Guest'}
-            </button>
-          </div>
-        `;
-
-        if (room.hotel === 'Bononi') {
-          bononiContainer.appendChild(card);
-        } else {
-          clubwayContainer.appendChild(card);
-        }
-      });
-
-      // Update counters
-      document.getElementById('assigned-guest-count').textContent = totalAssigned;
-      document.getElementById('bononi-occupancy-pill').textContent = `${bononiAssigned} / 16 Filled`;
-      document.getElementById('clubway-occupancy-pill').textContent = `${clubwayAssigned} / 14 Filled`;
-    }
-
-    function openAssignModal(roomId) {
-      currentAssigningRoomId = roomId;
-      const room = rooms.find(r => r.id === roomId);
-      if (!room) return;
-
-      document.getElementById('assignModalTitle').textContent = `Assign to ${room.name}`;
-      document.getElementById('assignModalSubtitle').textContent = `${room.hotel} &bull; Capacity: ${room.cap} Pax`;
-
-      const listContainer = document.getElementById('assignGuestOptions');
-      listContainer.innerHTML = '';
-
-      // Unassigned guests
-      const unassigned = guests.filter(g => !g.room);
-
-      if (unassigned.length === 0) {
-        listContainer.innerHTML = `<p class="text-xs text-royal-700 py-4 text-center">All guests are currently assigned to rooms!</p>`;
-      } else {
-        unassigned.forEach(g => {
-          const item = document.createElement('div');
-          item.className = "flex items-center justify-between p-2 rounded-xl hover:bg-champagne-50 border border-champagne-100/50 cursor-pointer transition";
-          item.onclick = () => {
-            assignGuestToRoom(g.id, roomId);
-            closeAssignModal();
-          };
-          item.innerHTML = `
-            <div>
-              <div class="text-xs font-semibold text-royal-900">${g.name}</div>
-              <div class="text-[10px] text-royal-700">${g.group} &bull; ${g.prob} Chance</div>
-            </div>
-            <span class="text-xs text-champagne-600 font-medium">Select &rarr;</span>
-          `;
-          listContainer.appendChild(item);
-        });
-      }
-
-      document.getElementById('assignModal').classList.remove('hidden');
-    }
-
-    function closeAssignModal() {
-      document.getElementById('assignModal').classList.add('hidden');
-      currentAssigningRoomId = null;
-    }
-
-    function assignGuestToRoom(guestId, roomId) {
-      const g = guests.find(item => item.id === guestId);
-      const r = rooms.find(item => item.id === roomId);
-      if (!g || !r) return;
-
-      const currentRoomCount = guests.filter(item => item.room === roomId).length;
-      if (currentRoomCount >= r.cap) {
-        showToast(`Cannot assign: ${r.name} is already at full capacity!`);
-        return;
-      }
-
-      g.room = roomId;
-      updateDashboard();
-      showToast(`Assigned ${g.name} to ${r.name} (${r.hotel})`);
-    }
-
-    function unassignGuest(guestId) {
-      const g = guests.find(item => item.id === guestId);
-      if (g) {
-        g.room = null;
-        updateDashboard();
-        showToast(`Unassigned ${g.name}`);
-      }
+    function removeGuestFromRoom(roomIdx, guestIdx) {
+      rooms[roomIdx].assigned.splice(guestIdx, 1);
+      renderRooms();
     }
 
     function autoAssignHighChance() {
-      // Auto assign high chance guests into Bononi first, then Clubway Grand
-      let unassignedHigh = guests.filter(g => g.prob === 'HIGH' && !g.room);
-      if (unassignedHigh.length === 0) {
-        showToast("No unassigned High Chance guests found.");
-        return;
-      }
+      // Clear current assignments
+      rooms.forEach(r => r.assigned = []);
 
-      let assignedCount = 0;
-      for (const room of rooms) {
-        const currentCount = guests.filter(g => g.room === room.id).length;
-        const availableSlots = room.cap - currentCount;
+      const highGuests = guests.filter(g => g.probability.toLowerCase().includes("high"));
+      let guestPointer = 0;
 
-        for (let i = 0; i < availableSlots; i++) {
-          if (unassignedHigh.length === 0) break;
-          const guestToAssign = unassignedHigh.shift();
-          guestToAssign.room = room.id;
-          assignedCount++;
+      for (let r of rooms) {
+        while (r.assigned.length < r.capacity && guestPointer < highGuests.length) {
+          r.assigned.push(highGuests[guestPointer].name);
+          guestPointer++;
         }
-        if (unassignedHigh.length === 0) break;
       }
-
-      updateDashboard();
-      showToast(`Auto-assigned ${assignedCount} high chance guests into rooms.`);
+      renderRooms();
     }
 
-    function clearRoomAssignments() {
-      guests.forEach(g => g.room = null);
-      updateDashboard();
-      showToast("Cleared all hotel room allocations.");
-    }
-
-    /* ====================================================================
-       ADD GUEST MODAL
-       ==================================================================== */
-    function openAddGuestModal() {
-      document.getElementById('addGuestModal').classList.remove('hidden');
-      document.getElementById('modalGuestName').focus();
-    }
-
-    function closeAddGuestModal() {
-      document.getElementById('addGuestModal').classList.add('hidden');
-      document.getElementById('newGuestForm').reset();
-    }
-
-    function saveNewGuest(e) {
-      e.preventDefault();
-      const name = document.getElementById('modalGuestName').value.trim();
-      const group = document.getElementById('modalGuestGroup').value;
-      const prob = document.getElementById('modalGuestProb').value;
-
-      if (!name) return;
-
-      const newId = 'guest_' + Date.now();
-      guests.push({
-        id: newId,
-        name: name,
-        group: group,
-        prob: prob,
-        room: null
+    // ==========================================
+    // FILTERING LOGIC
+    // ==========================================
+    function setGroupFilter(group) {
+      selectedGroupFilter = group;
+      document.querySelectorAll('.group-btn').forEach(b => {
+        b.classList.remove('bg-amber-900', 'text-white');
+        b.classList.add('bg-slate-100', 'text-slate-700');
+        if (b.dataset.group === group) {
+          b.classList.remove('bg-slate-100', 'text-slate-700');
+          b.classList.add('bg-amber-900', 'text-white');
+        }
       });
-
-      closeAddGuestModal();
-      updateDashboard();
-      showToast(`Added ${name} to ${group}.`);
+      renderGuestTable();
     }
 
-    /* ====================================================================
-       TAB SWITCHING
-       ==================================================================== */
-    function switchTab(tab) {
-      const rosterBtn = document.getElementById('tab-btn-roster');
-      const roomsBtn = document.getElementById('tab-btn-rooms');
-      const rosterContent = document.getElementById('tab-content-roster');
-      const roomsContent = document.getElementById('tab-content-rooms');
-
-      if (tab === 'roster') {
-        rosterBtn.className = "pb-3 text-sm font-semibold border-b-2 border-champagne-500 text-royal-900 flex items-center gap-2 transition";
-        roomsBtn.className = "pb-3 text-sm font-semibold border-b-2 border-transparent text-royal-700 hover:text-royal-900 flex items-center gap-2 transition";
-        rosterContent.classList.remove('hidden');
-        roomsContent.classList.add('hidden');
-      } else {
-        roomsBtn.className = "pb-3 text-sm font-semibold border-b-2 border-champagne-500 text-royal-900 flex items-center gap-2 transition";
-        rosterBtn.className = "pb-3 text-sm font-semibold border-b-2 border-transparent text-royal-700 hover:text-royal-900 flex items-center gap-2 transition";
-        roomsContent.classList.remove('hidden');
-        rosterContent.classList.add('hidden');
-      }
+    function setProbFilter(prob) {
+      selectedProbFilter = prob;
+      document.querySelectorAll('.prob-btn').forEach(b => {
+        b.classList.remove('bg-slate-800', 'text-white');
+        b.classList.add('bg-slate-100', 'text-slate-700');
+        if (b.dataset.prob === prob) {
+          b.classList.remove('bg-slate-100', 'text-slate-700');
+          b.classList.add('bg-slate-800', 'text-white');
+        }
+      });
+      renderGuestTable();
     }
 
-    /* ====================================================================
-       COPY SUMMARY / EXPORT CLIPBOARD
-       ==================================================================== */
-    function copySummary() {
-      const totalGuests = guests.length;
-      const highCount = guests.filter(g => g.prob === 'HIGH').length;
-      const maybeCount = guests.filter(g => g.prob === 'MAYBE').length;
-      const lowCount = guests.filter(g => g.prob === 'LOW').length;
-      const expectedTurnout = Math.round((highCount * WEIGHTS.HIGH) + (maybeCount * WEIGHTS.MAYBE) + (lowCount * WEIGHTS.LOW));
-
-      const momCount = guests.filter(g => g.group === 'Mom side').length;
-      const dadCount = guests.filter(g => g.group === 'Dad side').length;
-      const abhinabCount = guests.filter(g => g.group === 'Abhinab side').length;
-      const babliCount = guests.filter(g => g.group === 'Babli side').length;
-
-      const assignedBononi = guests.filter(g => g.room && g.room.startsWith('b_')).length;
-      const assignedClubway = guests.filter(g => g.room && g.room.startsWith('c_')).length;
-
-      const summaryText = `*Abhinab & Mamta Wedding - Full Guest & Hotel Summary*
-Location: Jorhat Celebrations (17th-19th)
-----------------------------------------
-• Total Guests Invited: ${totalGuests}
-  - Mom side: ${momCount}
-  - Dad side: ${dadCount}
-  - Abhinab side: ${abhinabCount}
-  - Babli side: ${babliCount}
-
-• Attendance Probabilities:
-  - High Chance (95%): ${highCount}
-  - Maybe (50%): ${maybeCount}
-  - Low Chance (20%): ${lowCount}
-  - Weighted Expected Turnout: ~${expectedTurnout} guests
-
-• Hotel Accommodations (Total 30 beds):
-  - Bononi Guest House: 16 Beds (${assignedBononi} assigned)
-  - Clubway Grand: 14 Beds (7 Exec Rooms) (${assignedClubway} assigned)
-  - Expected Shortfall / Local Home Capacity Needed: ~${Math.max(0, expectedTurnout - 30)} beds`;
-
-      const tempTextArea = document.createElement("textarea");
-      tempTextArea.value = summaryText;
-      document.body.appendChild(tempTextArea);
-      tempTextArea.select();
-      try {
-        document.execCommand('copy');
-        showToast("Wedding summary copied to clipboard!");
-      } catch (err) {
-        showToast("Failed to copy summary.");
-      }
-      document.body.removeChild(tempTextArea);
+    function filterRoster() {
+      renderGuestTable();
     }
 
-    /* ====================================================================
-       TOAST HELPER
-       ==================================================================== */
-    function showToast(message) {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = "bg-royal-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl border border-champagne-400/30 flex items-center gap-2 transform transition-all duration-300 pointer-events-auto opacity-0 translate-y-2";
-      toast.innerHTML = `<i class="ph ph-sparkle text-champagne-400"></i> ${message}`;
-      
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.classList.remove('opacity-0', 'translate-y-2');
-      }, 10);
-
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 3200);
+    // Modal Visibility
+    function openModal() {
+      document.getElementById("addModal").classList.remove("hidden");
+    }
+    function closeModal() {
+      document.getElementById("addModal").classList.add("hidden");
     }
   </script>
 </body>
