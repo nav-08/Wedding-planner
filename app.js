@@ -1,86 +1,6 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby02k1YLMbqjPYI22dob2ZLcAL7dS__pC6tOdIDwn86r9WZBBu9jvyNkeW0g9rIt3lZ/exec";
 
-// Fallback baseline data so UI never starts completely blank
-const BASELINE_GUESTS = [
-  // Mom side
-  { name: "Mahi", probability: "High chance", group: "Mom side" },
-  { name: "Moha", probability: "High chance", group: "Mom side" },
-  { name: "Rit", probability: "High chance", group: "Mom side" },
-  { name: "Riya", probability: "High chance", group: "Mom side" },
-  { name: "Tutu Aita", probability: "High chance", group: "Mom side" },
-  { name: "Momi mahi", probability: "High chance", group: "Mom side" },
-  { name: "Mala mahi", probability: "High chance", group: "Mom side" },
-  { name: "Bubul moha", probability: "High chance", group: "Mom side" },
-  { name: "Rish", probability: "Maybe", group: "Mom side" },
-  { name: "Rish's sister", probability: "High chance", group: "Mom side" },
-  { name: "Papu dada", probability: "High chance", group: "Mom side" },
-  { name: "Papu dada wife", probability: "High chance", group: "Mom side" },
-  { name: "Usnob dada", probability: "Maybe", group: "Mom side" },
-  { name: "Usnob's wife", probability: "Maybe", group: "Mom side" },
-  { name: "Bhai dada", probability: "Low chance", group: "Mom side" },
-  { name: "Babanu", probability: "Maybe", group: "Mom side" },
-  { name: "Babanu mother", probability: "Maybe", group: "Mom side" },
-  { name: "Ponchi ba", probability: "Low chance", group: "Mom side" },
-  { name: "Ponchi ba husband", probability: "Low chance", group: "Mom side" },
-  { name: "Friend 1", probability: "High chance", group: "Mom side" },
-  { name: "Friend 2", probability: "High chance", group: "Mom side" },
-  { name: "Friend 3", probability: "High chance", group: "Mom side" },
-  { name: "Friend 4", probability: "High chance", group: "Mom side" },
-  // Dad side
-  { name: "Ranu pehi", probability: "High chance", group: "Dad side" },
-  { name: "Ranu peha", probability: "High chance", group: "Dad side" },
-  { name: "Chirag", probability: "Maybe", group: "Dad side" },
-  { name: "Nikita", probability: "Maybe", group: "Dad side" },
-  { name: "Moina jetia", probability: "High chance", group: "Dad side" },
-  { name: "Maina ba", probability: "Maybe", group: "Dad side" },
-  { name: "Maina ba husband", probability: "Maybe", group: "Dad side" },
-  { name: "Dhubri dada", probability: "High chance", group: "Dad side" },
-  { name: "Duhubri dada wife", probability: "High chance", group: "Dad side" },
-  { name: "Dhubri dada daughter", probability: "High chance", group: "Dad side" },
-  { name: "Raju khura", probability: "High chance", group: "Dad side" },
-  { name: "Khuri", probability: "High chance", group: "Dad side" },
-  { name: "Bumon", probability: "High chance", group: "Dad side" },
-  { name: "Barasha ba", probability: "Low chance", group: "Dad side" },
-  { name: "Barasha ba husband", probability: "Low chance", group: "Dad side" },
-  { name: "Barasha ba daughter", probability: "Low chance", group: "Dad side" },
-  // Abhinab side
-  { name: "Soujanya", probability: "High chance", group: "Abhinab side" },
-  { name: "Abhishek", probability: "High chance", group: "Abhinab side" },
-  { name: "Soujanya sister", probability: "High chance", group: "Abhinab side" },
-  { name: "Soujany's bhindo", probability: "High chance", group: "Abhinab side" },
-  { name: "Abhishek's sister 1", probability: "High chance", group: "Abhinab side" },
-  { name: "Abhishek's sister 2", probability: "High chance", group: "Abhinab side" },
-  { name: "Abhishek's bhindo", probability: "High chance", group: "Abhinab side" },
-  { name: "Dhiraj", probability: "High chance", group: "Abhinab side" },
-  { name: "Rohan", probability: "High chance", group: "Abhinab side" },
-  { name: "Amar", probability: "High chance", group: "Abhinab side" },
-  { name: "Sourav", probability: "High chance", group: "Abhinab side" },
-  { name: "Patna", probability: "Low chance", group: "Abhinab side" },
-  { name: "Sonu", probability: "Low chance", group: "Abhinab side" },
-  { name: "Abhijit", probability: "Maybe", group: "Abhinab side" },
-  { name: "Sid", probability: "Low chance", group: "Abhinab side" },
-  { name: "Rupam", probability: "Maybe", group: "Abhinab side" },
-  { name: "Gitashree", probability: "Low chance", group: "Abhinab side" },
-  { name: "Ayush", probability: "High chance", group: "Abhinab side" },
-  { name: "Debashree", probability: "Maybe", group: "Abhinab side" },
-  { name: "Sonali", probability: "High chance", group: "Abhinab side" },
-  { name: "Subro", probability: "High chance", group: "Abhinab side" },
-  { name: "Nilutpal", probability: "Maybe", group: "Abhinab side" },
-  { name: "Suraj", probability: "Maybe", group: "Abhinab side" },
-  { name: "Tuku", probability: "High chance", group: "Abhinab side" },
-  { name: "Vasu", probability: "High chance", group: "Abhinab side" },
-  { name: "Vasudha", probability: "Maybe", group: "Abhinab side" },
-  { name: "Gomes", probability: "High chance", group: "Abhinab side" },
-  { name: "Monish da", probability: "Low chance", group: "Abhinab side" },
-  { name: "Debu", probability: "High chance", group: "Abhinab side" },
-  // Babli side
-  { name: "Bhupali", probability: "High chance", group: "Babli side" },
-  { name: "Friend 1 (Babli)", probability: "Maybe", group: "Babli side" },
-  { name: "Friend 2 (Babli)", probability: "Maybe", group: "Babli side" },
-  { name: "Friend 3 (Babli)", probability: "Low chance", group: "Babli side" }
-];
-
-let guests = JSON.parse(JSON.stringify(BASELINE_GUESTS));
+let guests = [];
 let rooms = [];
 let currentFilterGroup = "All";
 let currentFilterProb = "All";
@@ -90,13 +10,11 @@ let groupChart = null;
 let capacityChart = null;
 
 window.addEventListener("DOMContentLoaded", () => {
-  renderGroupButtons();
-  renderAll();
   fetchLiveData();
 });
 
 /**
- * Fetch without custom headers so CORS preflight is not triggered
+ * Live Fetch with Cache-Buster
  */
 async function fetchLiveData() {
   const dot = document.getElementById("syncDot");
@@ -108,22 +26,18 @@ async function fetchLiveData() {
   if (text) text.innerText = "Syncing from Sheet...";
 
   try {
-    const url = `${APPS_SCRIPT_URL}?t=${Date.now()}`;
-    const response = await fetch(url, {
+    const cacheBusterUrl = `${APPS_SCRIPT_URL}?t=${Date.now()}`;
+    const response = await fetch(cacheBusterUrl, {
       method: "GET",
       redirect: "follow"
     });
-    
+
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
 
     if (data.status === "success") {
-      if (data.guests && data.guests.length > 0) {
-        guests = data.guests;
-      }
-      if (data.rooms && data.rooms.length > 0) {
-        rooms = data.rooms;
-      }
+      guests = data.guests || [];
+      rooms = data.rooms || [];
 
       if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-400";
       if (text) text.innerText = `Synced with Google Sheet (${guests.length} guests)`;
@@ -131,16 +45,17 @@ async function fetchLiveData() {
       renderAll();
     }
   } catch (err) {
-    console.warn("Sheet fetch blocked or offline. Falling back to local state:", err);
-    if (dot) dot.className = "w-2 h-2 rounded-full bg-amber-500";
-    if (text) text.innerText = `Local Data Active (${guests.length} guests)`;
+    console.error("Fetch failed:", err);
+    if (dot) dot.className = "w-2 h-2 rounded-full bg-rose-500";
+    if (text) text.innerText = "Connection issue (Click refresh)";
   } finally {
     if (refreshIcon) refreshIcon.classList.remove("fa-spin");
   }
 }
 
 /**
- * Clean POST call without preflight headers
+ * Transmits updates to Google Sheets using URLSearchParams and no-cors.
+ * This completely bypasses browser CORS preflight blocks.
  */
 async function sendPostToSheet(payload) {
   const dot = document.getElementById("syncDot");
@@ -149,18 +64,26 @@ async function sendPostToSheet(payload) {
   if (text) text.innerText = "Saving to Google Sheet...";
 
   try {
+    const formData = new URLSearchParams();
+    for (const key in payload) {
+      formData.append(key, payload[key]);
+    }
+
     await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: formData.toString()
     });
+
     if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-400";
     if (text) text.innerText = "Saved to Google Sheet";
   } catch (e) {
     console.error("Save error:", e);
     if (dot) dot.className = "w-2 h-2 rounded-full bg-rose-500";
-    if (text) text.innerText = "Saved locally (Sheet offline)";
+    if (text) text.innerText = "Sync issue";
   }
 }
 
@@ -409,7 +332,7 @@ async function assignGuestToRoom(roomIdx, guestName) {
     await sendPostToSheet({
       action: "SAVE_ROOM_ASSIGNMENT",
       rowIndex: room.rowIndex,
-      assigned: room.assigned
+      assigned: room.assigned.join(", ")
     });
   }
 }
@@ -422,7 +345,7 @@ async function removeGuestFromRoom(roomIdx, guestIdx) {
   await sendPostToSheet({
     action: "SAVE_ROOM_ASSIGNMENT",
     rowIndex: room.rowIndex,
-    assigned: room.assigned
+    assigned: room.assigned.join(", ")
   });
 }
 
