@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abhinab & Mamta's Wedding | Guest & Room Manager</title>
+  <title>Abhinab & Mamta's Wedding | Guest & Room Planner</title>
   
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Google Fonts & Font Awesome -->
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
@@ -25,7 +23,7 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <!-- Wedding Header Banner -->
+  <!-- Header -->
   <header class="bg-gradient-to-r from-amber-950 via-rose-950 to-stone-900 text-white shadow-xl sticky top-0 z-40 border-b border-amber-500/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-between items-center gap-4">
       <div>
@@ -33,18 +31,18 @@
           <span class="bg-amber-400 text-amber-950 text-[11px] uppercase px-2.5 py-0.5 rounded-full font-extrabold tracking-wider">Jorhat Celebration</span>
           <span id="syncBadge" class="inline-flex items-center gap-1.5 text-xs bg-black/40 border border-white/10 px-3 py-0.5 rounded-full text-amber-200">
             <span id="syncDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-            <span id="syncText">Connecting to Google Sheet...</span>
+            <span id="syncText">Fetching from Sheet...</span>
           </span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-serif font-bold text-amber-100 tracking-wide">
           Abhinab & Mamta's Wedding
         </h1>
-        <p class="text-xs sm:text-sm text-rose-200">Live Bidirectional Guest & Accommodation Visualizer</p>
+        <p class="text-xs sm:text-sm text-rose-200">Real-time Guest Turnout & Accommodation Manager</p>
       </div>
 
       <div class="flex items-center gap-2.5">
         <button onclick="fetchLiveData()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-semibold transition flex items-center gap-2 border border-white/20">
-          <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Refresh
+          <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Refresh Data
         </button>
         <button onclick="openModal()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 text-amber-950 rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
           <i class="fa-solid fa-user-plus"></i> Add Guest
@@ -53,10 +51,9 @@
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Main Body -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-8">
-
-    <!-- KPI Summary Row -->
+    <!-- Stat Cards -->
     <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
       <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
         <div class="flex justify-between items-center text-slate-400">
@@ -76,7 +73,7 @@
         </div>
         <div class="mt-2">
           <span id="statHigh" class="text-3xl font-black text-emerald-600">--</span>
-          <span class="text-xs text-slate-400 block mt-0.5">Confident attendance</span>
+          <span class="text-xs text-slate-400 block mt-0.5">Confirmed / Highly likely</span>
         </div>
       </div>
 
@@ -114,7 +111,7 @@
       </div>
     </section>
 
-    <!-- Visual Analytics Row -->
+    <!-- Analytics Charts -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
         <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
@@ -144,34 +141,23 @@
       </div>
     </section>
 
-    <!-- Guest Roster & Rooms Grid -->
+    <!-- Rosters & Rooms -->
     <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      
-      <!-- Guest Roster (7 cols) -->
+      <!-- Guest Roster -->
       <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
         <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-slate-100">
           <div>
             <h2 class="text-lg font-bold text-slate-900">Guest Roster</h2>
-            <p class="text-xs text-slate-500">Changes save directly to Google Sheet</p>
+            <p class="text-xs text-slate-500">Live synced directly with Google Sheet1</p>
           </div>
-          
           <div class="relative w-full sm:w-60">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
             <input type="text" id="searchInput" oninput="renderTable()" placeholder="Search guest name..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
           </div>
         </div>
 
-        <!-- Filter Pills -->
         <div class="py-3 border-b border-slate-100 space-y-2">
-          <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold" id="groupFilters">
-            <span class="text-slate-400 text-[11px] uppercase mr-1">Side:</span>
-            <button onclick="setFilterGroup('All')" class="group-btn active px-3 py-1 rounded-lg bg-amber-900 text-white" data-group="All">All</button>
-            <button onclick="setFilterGroup('Mom side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Mom side">Mom side</button>
-            <button onclick="setFilterGroup('Dad side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Dad side">Dad side</button>
-            <button onclick="setFilterGroup('Abhinab side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Abhinab side">Abhinab side</button>
-            <button onclick="setFilterGroup('Babli side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Babli side">Babli side</button>
-          </div>
-
+          <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold" id="groupFilterContainer"></div>
           <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
             <span class="text-slate-400 text-[11px] uppercase mr-1">Chance:</span>
             <button onclick="setFilterProb('All')" class="prob-btn active px-3 py-1 rounded-lg bg-slate-800 text-white" data-prob="All">All</button>
@@ -181,7 +167,6 @@
           </div>
         </div>
 
-        <!-- Table -->
         <div class="overflow-y-auto max-h-[520px] custom-scrollbar mt-3">
           <table class="w-full text-left text-sm border-separate border-spacing-y-1">
             <thead class="sticky top-0 bg-white text-[11px] uppercase font-bold text-slate-400">
@@ -191,39 +176,32 @@
                 <th class="py-2 px-3">Chance</th>
               </tr>
             </thead>
-            <tbody id="guestTableBody">
-              <!-- Dynamically Populated -->
-            </tbody>
+            <tbody id="guestTableBody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Hotel Accommodation Column (5 cols) -->
+      <!-- Hotel Accommodation -->
       <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
         <div class="flex justify-between items-center pb-4 border-b border-slate-100">
           <div>
             <h2 class="text-lg font-bold text-slate-900">Hotel Rooms</h2>
-            <p class="text-xs text-slate-500" id="roomCapacitySummary">Loading inventory from Sheet2...</p>
+            <p class="text-xs text-slate-500" id="roomCapacitySummary">Loading room inventory from Sheet2...</p>
           </div>
           <span class="text-xs text-slate-400 font-medium">Manual Allocator</span>
         </div>
 
-        <div class="overflow-y-auto max-h-[560px] custom-scrollbar mt-4 space-y-3" id="roomCardsContainer">
-          <!-- Dynamically populated from Sheet2 -->
-        </div>
+        <div class="overflow-y-auto max-h-[560px] custom-scrollbar mt-4 space-y-3" id="roomCardsContainer"></div>
       </div>
-
     </section>
   </main>
 
   <!-- Add Guest Modal -->
   <div id="addModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-amber-100 transform transition-all">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-amber-100">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-bold text-slate-900">Add New Guest</h3>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
       <form id="addGuestForm" onsubmit="handleAddGuest(event)" class="space-y-4">
@@ -231,7 +209,6 @@
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guest Name</label>
           <input type="text" id="modalGuestName" required placeholder="Full Name" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
         </div>
-
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Side / Circle</label>
           <select id="modalGuestGroup" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
@@ -241,7 +218,6 @@
             <option value="Babli side">Babli side</option>
           </select>
         </div>
-
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Attendance Probability</label>
           <select id="modalGuestProb" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
@@ -250,7 +226,6 @@
             <option value="Low chance">Low chance (20%)</option>
           </select>
         </div>
-
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">Cancel</button>
           <button type="submit" id="modalSubmitBtn" class="px-5 py-2 bg-gradient-to-r from-amber-600 to-rose-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5">
@@ -266,364 +241,7 @@
     Abhinab & Mamta's Wedding • Jorhat, Assam • January 2027
   </footer>
 
-  <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby02k1YLMbqjPYI22dob2ZLcAL7dS__pC6tOdIDwn86r9WZBBu9jvyNkeW0g9rIt3lZ/exec";
-
-    let guests = [];
-    let rooms = [];
-    let currentFilterGroup = "All";
-    let currentFilterProb = "All";
-
-    let probChart = null;
-    let groupChart = null;
-    let capacityChart = null;
-
-    window.addEventListener("DOMContentLoaded", () => {
-      fetchLiveData();
-    });
-
-    /**
-     * Robust fetch from Google Apps Script
-     */
-    async function fetchLiveData() {
-      const badge = document.getElementById("syncBadge");
-      const dot = document.getElementById("syncDot");
-      const text = document.getElementById("syncText");
-      const refreshIcon = document.getElementById("refreshIcon");
-
-      if (refreshIcon) refreshIcon.classList.add("fa-spin");
-      dot.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse";
-      text.innerText = "Syncing with Sheet...";
-
-      try {
-        const response = await fetch(APPS_SCRIPT_URL);
-        const data = await response.json();
-
-        if (data.status === "success") {
-          guests = data.guests || [];
-          rooms = data.rooms || [];
-
-          dot.className = "w-2 h-2 rounded-full bg-emerald-400";
-          text.innerText = "Live Synced with Google Sheet";
-          renderAll();
-        } else {
-          throw new Error("Invalid structure from Apps Script");
-        }
-      } catch (err) {
-        console.error("Fetch failed:", err);
-        dot.className = "w-2 h-2 rounded-full bg-rose-500";
-        text.innerText = "Connection issue (Click to retry)";
-      } finally {
-        if (refreshIcon) refreshIcon.classList.remove("fa-spin");
-      }
-    }
-
-    /**
-     * Reliable POST to Google Apps Script bypassing CORS preflight
-     */
-    async function sendPostToSheet(payload) {
-      const dot = document.getElementById("syncDot");
-      const text = document.getElementById("syncText");
-      dot.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse";
-      text.innerText = "Saving to Google Sheet...";
-
-      try {
-        await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
-
-        dot.className = "w-2 h-2 rounded-full bg-emerald-400";
-        text.innerText = "Saved to Google Sheet";
-      } catch (e) {
-        console.error("Save error:", e);
-        dot.className = "w-2 h-2 rounded-full bg-rose-500";
-        text.innerText = "Error saving";
-      }
-    }
-
-    function renderAll() {
-      updateKPIs();
-      renderCharts();
-      renderTable();
-      renderRooms();
-    }
-
-    function updateKPIs() {
-      const total = guests.length;
-      const high = guests.filter(g => g.probability.toLowerCase().includes("high")).length;
-      const maybe = guests.filter(g => g.probability.toLowerCase().includes("maybe")).length;
-      const low = guests.filter(g => g.probability.toLowerCase().includes("low")).length;
-      const forecast = Math.round((high * 0.95) + (maybe * 0.50) + (low * 0.20));
-
-      document.getElementById("statTotal").innerText = total;
-      document.getElementById("statHigh").innerText = high;
-      document.getElementById("statMaybe").innerText = maybe;
-      document.getElementById("statLow").innerText = low;
-      document.getElementById("statForecast").innerText = forecast;
-    }
-
-    function renderCharts() {
-      const high = guests.filter(g => g.probability.toLowerCase().includes("high")).length;
-      const maybe = guests.filter(g => g.probability.toLowerCase().includes("maybe")).length;
-      const low = guests.filter(g => g.probability.toLowerCase().includes("low")).length;
-
-      // Probability Doughnut
-      const pCtx = document.getElementById("probChart").getContext("2d");
-      if (probChart) probChart.destroy();
-      probChart = new Chart(pCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['High Chance', 'Maybe', 'Low Chance'],
-          datasets: [{
-            data: [high, maybe, low],
-            backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
-        }
-      });
-
-      // Side Breakdown
-      const groupCounts = {};
-      guests.forEach(g => {
-        const grp = g.group || 'Other';
-        groupCounts[grp] = (groupCounts[grp] || 0) + 1;
-      });
-
-      const gCtx = document.getElementById("groupChart").getContext("2d");
-      if (groupChart) groupChart.destroy();
-      groupChart = new Chart(gCtx, {
-        type: 'bar',
-        data: {
-          labels: Object.keys(groupCounts),
-          datasets: [{
-            data: Object.values(groupCounts),
-            backgroundColor: ['#8b5cf6', '#3b82f6', '#d97706', '#ec4899', '#06b6d4'],
-            borderRadius: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
-        }
-      });
-
-      // Bed Capacity vs Scenarios
-      const totalBeds = rooms.reduce((sum, r) => sum + r.capacity, 0);
-      const forecast = Math.round((high * 0.95) + (maybe * 0.50) + (low * 0.20));
-
-      const cCtx = document.getElementById("capacityChart").getContext("2d");
-      if (capacityChart) capacityChart.destroy();
-      capacityChart = new Chart(cCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Total Beds', 'High Only', 'Forecast', 'Total List'],
-          datasets: [{
-            data: [totalBeds, high, forecast, guests.length],
-            backgroundColor: ['#0284c7', '#10b981', '#7c3aed', '#e11d48'],
-            borderRadius: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
-      });
-    }
-
-    function renderTable() {
-      const search = document.getElementById("searchInput").value.toLowerCase();
-      const tbody = document.getElementById("guestTableBody");
-      tbody.innerHTML = "";
-
-      const filtered = guests.filter(g => {
-        const matchesSearch = g.name.toLowerCase().includes(search);
-        const matchesGroup = (currentFilterGroup === 'All') || (g.group.toLowerCase() === currentFilterGroup.toLowerCase());
-        const matchesProb = (currentFilterProb === 'All') || (g.probability.toLowerCase() === currentFilterProb.toLowerCase());
-        return matchesSearch && matchesGroup && matchesProb;
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 text-slate-400 text-xs">No guests found.</td></tr>`;
-        return;
-      }
-
-      filtered.forEach(g => {
-        let badgeColor = "bg-slate-100 text-slate-700";
-        if (g.probability.toLowerCase().includes("high")) badgeColor = "bg-emerald-50 text-emerald-700 border border-emerald-200";
-        else if (g.probability.toLowerCase().includes("maybe")) badgeColor = "bg-amber-50 text-amber-700 border border-amber-200";
-        else if (g.probability.toLowerCase().includes("low")) badgeColor = "bg-rose-50 text-rose-700 border border-rose-200";
-
-        const tr = document.createElement("tr");
-        tr.className = "bg-slate-50/60 hover:bg-amber-50/50 transition rounded-xl";
-        tr.innerHTML = `
-          <td class="py-2.5 px-3 font-semibold text-slate-800 text-xs sm:text-sm">${g.name}</td>
-          <td class="py-2.5 px-3 text-xs text-slate-500 font-medium">${g.group}</td>
-          <td class="py-2.5 px-3">
-            <select onchange="updateGuestChance('${g.name}', this.value)" class="text-xs font-semibold px-2.5 py-1 rounded-lg ${badgeColor} cursor-pointer focus:outline-none shadow-sm">
-              <option value="High chance" ${g.probability.toLowerCase().includes("high") ? "selected" : ""}>High chance</option>
-              <option value="Maybe" ${g.probability.toLowerCase().includes("maybe") ? "selected" : ""}>Maybe</option>
-              <option value="Low chance" ${g.probability.toLowerCase().includes("low") ? "selected" : ""}>Low chance</option>
-            </select>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderRooms() {
-      const container = document.getElementById("roomCardsContainer");
-      container.innerHTML = "";
-
-      const totalBeds = rooms.reduce((sum, r) => sum + r.capacity, 0);
-      const totalAssigned = rooms.reduce((sum, r) => sum + (r.assigned ? r.assigned.length : 0), 0);
-      document.getElementById("roomCapacitySummary").innerText = `${totalAssigned} of ${totalBeds} Beds Occupied Across All Venues`;
-
-      rooms.forEach((r, idx) => {
-        const assignedList = r.assigned || [];
-        const isFull = assignedList.length >= r.capacity;
-
-        const card = document.createElement("div");
-        card.className = `p-4 rounded-xl border transition ${isFull ? 'bg-slate-50/80 border-slate-200' : 'bg-white border-amber-100 shadow-sm'}`;
-        card.innerHTML = `
-          <div class="flex justify-between items-center mb-2">
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700">${r.hotel}</span>
-              <h4 class="font-bold text-slate-800 text-xs sm:text-sm">${r.name}</h4>
-            </div>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full ${isFull ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-              ${assignedList.length} / ${r.capacity} Beds
-            </span>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-1.5 mt-2 min-h-[30px]">
-            ${assignedList.map((guestName, gIdx) => `
-              <span class="inline-flex items-center gap-1.5 text-xs bg-slate-100 text-slate-700 font-medium px-2 py-0.5 rounded-md border border-slate-200">
-                ${guestName}
-                <button onclick="removeGuestFromRoom(${idx}, ${gIdx})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-xmark text-[10px]"></i></button>
-              </span>
-            `).join('')}
-
-            ${!isFull ? `
-              <select onchange="assignGuestToRoom(${idx}, this.value); this.value='';" class="text-xs bg-slate-50 border border-dashed border-slate-300 text-slate-500 rounded-md px-2 py-1 focus:outline-none">
-                <option value="">+ Assign Guest</option>
-                ${guests.filter(g => !isGuestAssigned(g.name)).map(g => `<option value="${g.name}">${g.name} (${g.probability})</option>`).join('')}
-              </select>
-            ` : ''}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function isGuestAssigned(name) {
-      return rooms.some(r => r.assigned && r.assigned.includes(name));
-    }
-
-    async function assignGuestToRoom(roomIdx, guestName) {
-      if (!guestName) return;
-      const room = rooms[roomIdx];
-      if (!room.assigned) room.assigned = [];
-
-      if (room.assigned.length < room.capacity) {
-        room.assigned.push(guestName);
-        renderRooms();
-
-        // Persist directly to Google Sheet2
-        await sendPostToSheet({
-          action: "SAVE_ROOM_ASSIGNMENT",
-          rowIndex: room.rowIndex,
-          assigned: room.assigned
-        });
-      }
-    }
-
-    async function removeGuestFromRoom(roomIdx, guestIdx) {
-      const room = rooms[roomIdx];
-      room.assigned.splice(guestIdx, 1);
-      renderRooms();
-
-      // Persist deletion directly to Google Sheet2
-      await sendPostToSheet({
-        action: "SAVE_ROOM_ASSIGNMENT",
-        rowIndex: room.rowIndex,
-        assigned: room.assigned
-      });
-    }
-
-    async function updateGuestChance(name, newProb) {
-      const g = guests.find(item => item.name === name);
-      if (g) {
-        g.probability = newProb;
-        renderAll();
-
-        await sendPostToSheet({
-          action: "UPDATE_PROBABILITY",
-          name: name,
-          probability: newProb
-        });
-      }
-    }
-
-    async function handleAddGuest(e) {
-      e.preventDefault();
-      const name = document.getElementById("modalGuestName").value.trim();
-      const group = document.getElementById("modalGuestGroup").value;
-      const prob = document.getElementById("modalGuestProb").value;
-
-      if (!name) return;
-
-      guests.push({ name, group, probability: prob });
-      renderAll();
-      closeModal();
-
-      await sendPostToSheet({
-        action: "ADD_GUEST",
-        name: name,
-        group: group,
-        probability: prob
-      });
-
-      document.getElementById("addGuestForm").reset();
-    }
-
-    function setFilterGroup(group) {
-      currentFilterGroup = group;
-      document.querySelectorAll('.group-btn').forEach(b => {
-        b.classList.remove('bg-amber-900', 'text-white');
-        b.classList.add('bg-slate-100', 'text-slate-700');
-        if (b.dataset.group === group) {
-          b.classList.remove('bg-slate-100', 'text-slate-700');
-          b.classList.add('bg-amber-900', 'text-white');
-        }
-      });
-      renderTable();
-    }
-
-    function setFilterProb(prob) {
-      currentFilterProb = prob;
-      document.querySelectorAll('.prob-btn').forEach(b => {
-        b.classList.remove('bg-slate-800', 'text-white');
-        if (b.dataset.prob === prob) {
-          b.classList.add('bg-slate-800', 'text-white');
-        }
-      });
-      renderTable();
-    }
-
-    function openModal() { document.getElementById("addModal").classList.remove("hidden"); }
-    function closeModal() { document.getElementById("addModal").classList.add("hidden"); }
-  </script>
+  <!-- Clean Separation of Logic -->
+  <script src="app.js"></script>
 </body>
 </html>
