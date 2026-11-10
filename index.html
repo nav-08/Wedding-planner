@@ -1,222 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abhinab & Mamta | Wedding Guest & Room Planner</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhinab & Mamta's Wedding | Guest & Room Visualizer</title>
+  
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            maroon: {
+              800: '#581825',
+              900: '#3d0c16',
+            },
+            gold: {
+              400: '#e5c07b',
+              500: '#d4af37',
+              600: '#aa8c2c',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #fbf9f6;
-    }
-    .font-serif-title {
-      font-family: 'Playfair Display', serif;
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background-color: #cbd5e1;
-      border-radius: 9999px;
-    }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-[#fcfaf7] text-slate-800 antialiased min-h-screen flex flex-col font-sans">
 
-  <!-- Header Banner -->
-  <header class="bg-gradient-to-r from-amber-900 via-rose-900 to-amber-950 text-white shadow-lg sticky top-0 z-40">
+  <!-- Royal Wedding Header -->
+  <header class="bg-gradient-to-r from-maroon-900 via-rose-950 to-amber-950 text-white shadow-xl sticky top-0 z-40 border-b border-amber-500/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-between items-center gap-4">
       <div>
-        <div class="flex items-center gap-2">
-          <span class="bg-amber-400 text-amber-950 text-xs uppercase px-2.5 py-0.5 rounded-full font-bold tracking-wider">Jorhat Wedding</span>
-          <span id="syncStatus" class="inline-flex items-center gap-1.5 text-xs bg-black/30 border border-white/20 px-3 py-0.5 rounded-full text-amber-200">
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-            Connecting to Google Sheet...
+        <div class="flex items-center gap-2 mb-1">
+          <span class="bg-amber-400 text-amber-950 text-[11px] uppercase px-2.5 py-0.5 rounded-full font-extrabold tracking-wider shadow-sm">Jorhat Celebration</span>
+          <span id="syncStatusBadge" class="inline-flex items-center gap-1.5 text-xs bg-black/40 border border-white/10 px-3 py-0.5 rounded-full text-amber-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Data Ready (72 Guests Loaded)
           </span>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-serif-title font-bold text-amber-100 tracking-wide mt-1">
+        <h1 class="text-2xl sm:text-3xl font-serif font-bold text-amber-100 tracking-wide">
           Abhinab & Mamta's Wedding
         </h1>
-        <p class="text-xs sm:text-sm text-rose-200">Guest Turnout Forecasting & Room Allocation Dashboard</p>
+        <p class="text-xs sm:text-sm text-rose-200">Chameli Memsaab Bungalow • Guest Turnout & Accommodation Planner</p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="fetchSheetData()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition flex items-center gap-2 border border-white/20">
-          <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Refresh Sheet
+      <div class="flex items-center gap-2.5">
+        <button onclick="syncWithGoogleSheet()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-semibold transition flex items-center gap-2 border border-white/20 shadow-sm">
+          <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Check Sheet Sync
         </button>
-        <button onclick="openModal()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-amber-950 rounded-lg text-sm font-bold shadow-md transition flex items-center gap-2">
+        <button onclick="openModal()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-amber-950 rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
           <i class="fa-solid fa-user-plus"></i> Add Guest
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Main Content Wrapper -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-8">
 
     <!-- KPI Summary Row -->
     <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
-      <div class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
         <div class="flex justify-between items-center text-slate-400">
-          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Listed</span>
-          <i class="fa-solid fa-users text-amber-600"></i>
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Total Listed</span>
+          <div class="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+            <i class="fa-solid fa-users text-sm"></i>
+          </div>
         </div>
-        <div class="mt-2">
-          <span id="statTotal" class="text-3xl font-extrabold text-slate-800">0</span>
-          <span class="text-xs text-slate-400 block mt-0.5">Invited guests</span>
+        <div class="mt-3">
+          <span id="kpiTotal" class="text-3xl font-black text-slate-800">72</span>
+          <span class="text-xs text-slate-400 block mt-0.5 font-medium">Invited guests</span>
         </div>
       </div>
 
       <div class="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm flex flex-col justify-between">
         <div class="flex justify-between items-center text-emerald-600">
-          <span class="text-xs font-semibold uppercase tracking-wider">High Chance</span>
-          <i class="fa-solid fa-circle-check"></i>
+          <span class="text-xs font-bold uppercase tracking-wider">High Chance</span>
+          <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <i class="fa-solid fa-circle-check text-sm"></i>
+          </div>
         </div>
-        <div class="mt-2">
-          <span id="statHigh" class="text-3xl font-extrabold text-emerald-600">0</span>
-          <span class="text-xs text-slate-400 block mt-0.5">Confident attendance</span>
+        <div class="mt-3">
+          <span id="kpiHigh" class="text-3xl font-black text-emerald-600">42</span>
+          <span class="text-xs text-slate-400 block mt-0.5 font-medium">Confirmed / Very likely</span>
         </div>
       </div>
 
       <div class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
         <div class="flex justify-between items-center text-amber-600">
-          <span class="text-xs font-semibold uppercase tracking-wider">Maybes</span>
-          <i class="fa-solid fa-circle-question"></i>
+          <span class="text-xs font-bold uppercase tracking-wider">Maybes</span>
+          <div class="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+            <i class="fa-solid fa-circle-question text-sm"></i>
+          </div>
         </div>
-        <div class="mt-2">
-          <span id="statMaybe" class="text-3xl font-extrabold text-amber-600">0</span>
-          <span class="text-xs text-slate-400 block mt-0.5">Tentative guests</span>
+        <div class="mt-3">
+          <span id="kpiMaybe" class="text-3xl font-black text-amber-600">18</span>
+          <span class="text-xs text-slate-400 block mt-0.5 font-medium">Tentative attendees</span>
         </div>
       </div>
 
       <div class="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm flex flex-col justify-between">
         <div class="flex justify-between items-center text-rose-500">
-          <span class="text-xs font-semibold uppercase tracking-wider">Low Chance</span>
-          <i class="fa-solid fa-circle-xmark"></i>
+          <span class="text-xs font-bold uppercase tracking-wider">Low Chance</span>
+          <div class="w-8 h-8 rounded-full bg-rose-50 flex items-center justify-center text-rose-500">
+            <i class="fa-solid fa-circle-xmark text-sm"></i>
+          </div>
         </div>
-        <div class="mt-2">
-          <span id="statLow" class="text-3xl font-extrabold text-rose-500">0</span>
-          <span class="text-xs text-slate-400 block mt-0.5">Unlikely to travel</span>
+        <div class="mt-3">
+          <span id="kpiLow" class="text-3xl font-black text-rose-500">12</span>
+          <span class="text-xs text-slate-400 block mt-0.5 font-medium">Unlikely to attend</span>
         </div>
       </div>
 
-      <div class="col-span-2 md:col-span-1 bg-gradient-to-br from-amber-600 to-rose-700 text-white p-5 rounded-2xl shadow-md flex flex-col justify-between">
+      <div class="col-span-2 md:col-span-1 bg-gradient-to-br from-amber-700 via-rose-800 to-maroon-900 text-white p-5 rounded-2xl shadow-md flex flex-col justify-between border border-amber-500/20">
         <div class="flex justify-between items-center text-amber-200">
-          <span class="text-xs font-semibold uppercase tracking-wider">Expected Turnout</span>
-          <i class="fa-solid fa-calculator"></i>
+          <span class="text-xs font-bold uppercase tracking-wider">Forecast Turnout</span>
+          <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-amber-300">
+            <i class="fa-solid fa-calculator text-sm"></i>
+          </div>
         </div>
-        <div class="mt-2">
-          <span id="statForecast" class="text-3xl font-extrabold text-white">0</span>
-          <span class="text-xs text-amber-100/80 block mt-0.5">Weighted statistical est.</span>
+        <div class="mt-3">
+          <span id="kpiForecast" class="text-3xl font-black text-white">51</span>
+          <span class="text-xs text-amber-100/70 block mt-0.5 font-medium">Weighted statistical (95/50/20)</span>
         </div>
       </div>
     </section>
 
-    <!-- Visual Analytics Row -->
+    <!-- Visual Charts Row -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-        <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-2">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col">
+        <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
           <i class="fa-solid fa-chart-pie text-amber-600"></i> Attendance Probability
         </h3>
-        <div class="relative flex-1 flex items-center justify-center min-h-[200px]">
+        <div class="relative flex-1 min-h-[210px] flex items-center justify-center">
           <canvas id="probChart"></canvas>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-        <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-chart-simple text-amber-600"></i> Guest Count by Group / Side
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col">
+        <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-chart-simple text-amber-600"></i> Guest Distribution by Side
         </h3>
-        <div class="relative flex-1 flex items-center justify-center min-h-[200px]">
+        <div class="relative flex-1 min-h-[210px] flex items-center justify-center">
           <canvas id="groupChart"></canvas>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-        <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-bed text-amber-600"></i> Capacity vs Turnout Scenarios
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col">
+        <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-hotel text-amber-600"></i> Room Capacity vs Scenarios
         </h3>
-        <div class="relative flex-1 flex items-center justify-center min-h-[200px]">
+        <div class="relative flex-1 min-h-[210px] flex items-center justify-center">
           <canvas id="capacityChart"></canvas>
         </div>
       </div>
     </section>
 
-    <!-- Guest Roster & Room Manager Split -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- Guest Roster & Room Manager -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
-      <!-- Guest Roster (7 cols) -->
-      <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
+      <!-- Guest Roster Column (7 cols) -->
+      <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col">
+        
         <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-slate-100">
           <div>
             <h2 class="text-lg font-bold text-slate-900">Guest Roster</h2>
-            <p class="text-xs text-slate-500">Change chance here or in the sheet to auto-sync</p>
+            <p class="text-xs text-slate-500">Filter, search, or update probability on the fly</p>
           </div>
-          <!-- Search Input -->
-          <div class="relative w-full sm:w-56">
+          
+          <div class="relative w-full sm:w-60">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-            <input type="text" id="searchInput" oninput="filterRoster()" placeholder="Search guest name..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <input type="text" id="searchInput" oninput="renderTable()" placeholder="Search guest name..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
           </div>
         </div>
 
-        <!-- Filter Buttons -->
-        <div class="flex flex-wrap items-center gap-2 py-3 border-b border-slate-100 text-xs font-semibold">
-          <span class="text-slate-400 mr-1">Group:</span>
-          <button onclick="setGroupFilter('All')" class="group-btn active px-2.5 py-1 rounded-md bg-amber-900 text-white" data-group="All">All</button>
-          <button onclick="setGroupFilter('Mom side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Mom side">Mom side</button>
-          <button onclick="setGroupFilter('Dad side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Dad side">Dad side</button>
-          <button onclick="setGroupFilter('Abhinab side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Abhinab side">Abhinab side</button>
-          <button onclick="setGroupFilter('Babli side')" class="group-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Babli side">Babli side</button>
+        <!-- Filter Pills -->
+        <div class="py-3 border-b border-slate-100 space-y-2">
+          <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
+            <span class="text-slate-400 text-[11px] uppercase mr-1 w-12">Side:</span>
+            <button onclick="setFilterGroup('All')" class="group-btn active px-3 py-1 rounded-lg bg-amber-900 text-white shadow-sm" data-group="All">All (72)</button>
+            <button onclick="setFilterGroup('Mom side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Mom side">Mom side (23)</button>
+            <button onclick="setFilterGroup('Dad side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Dad side">Dad side (16)</button>
+            <button onclick="setFilterGroup('Abhinab side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Abhinab side">Abhinab side (29)</button>
+            <button onclick="setFilterGroup('Babli side')" class="group-btn px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200" data-group="Babli side">Babli side (4)</button>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
+            <span class="text-slate-400 text-[11px] uppercase mr-1 w-12">Chance:</span>
+            <button onclick="setFilterProb('All')" class="prob-btn active px-3 py-1 rounded-lg bg-slate-800 text-white" data-prob="All">All</button>
+            <button onclick="setFilterProb('High chance')" class="prob-btn px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200" data-prob="High chance">High (42)</button>
+            <button onclick="setFilterProb('Maybe')" class="prob-btn px-3 py-1 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200" data-prob="Maybe">Maybe (18)</button>
+            <button onclick="setFilterProb('Low chance')" class="prob-btn px-3 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200" data-prob="Low chance">Low (12)</button>
+          </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2 py-3 border-b border-slate-100 text-xs font-semibold">
-          <span class="text-slate-400 mr-1">Chance:</span>
-          <button onclick="setProbFilter('All')" class="prob-btn active px-2.5 py-1 rounded-md bg-slate-800 text-white" data-prob="All">All</button>
-          <button onclick="setProbFilter('High chance')" class="prob-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-prob="High chance">High</button>
-          <button onclick="setProbFilter('Maybe')" class="prob-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-prob="Maybe">Maybe</button>
-          <button onclick="setProbFilter('Low chance')" class="prob-btn px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200" data-prob="Low chance">Low</button>
-        </div>
-
-        <!-- Table Container -->
-        <div class="overflow-y-auto max-h-[500px] custom-scrollbar mt-3">
-          <table class="w-full text-left text-sm">
-            <thead class="sticky top-0 bg-white text-xs uppercase text-slate-400 border-b border-slate-100">
+        <!-- Table -->
+        <div class="overflow-y-auto max-h-[520px] custom-scrollbar mt-3">
+          <table class="w-full text-left text-sm border-separate border-spacing-y-1">
+            <thead class="sticky top-0 bg-white text-[11px] uppercase font-bold text-slate-400">
               <tr>
-                <th class="py-2.5 px-3">Name</th>
-                <th class="py-2.5 px-3">Side</th>
-                <th class="py-2.5 px-3">Probability</th>
+                <th class="py-2 px-3">Guest Name</th>
+                <th class="py-2 px-3">Family / Side</th>
+                <th class="py-2 px-3">Attendance Chance</th>
               </tr>
             </thead>
-            <tbody id="guestTableBody" class="divide-y divide-slate-100">
-              <!-- Dynamically Populated -->
+            <tbody id="guestTableBody">
+              <!-- Dynamically populated -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Room Capacity & Assignments (5 cols) -->
-      <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
+      <!-- Hotel Accommodation Column (5 cols) -->
+      <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col">
         <div class="flex justify-between items-center pb-4 border-b border-slate-100">
           <div>
             <h2 class="text-lg font-bold text-slate-900">Hotel Rooms</h2>
-            <p class="text-xs text-slate-500">Bononi Guest House & Clubway Grand</p>
+            <p class="text-xs text-slate-500">Bononi Guest House & Clubway Grand (30 Total Beds)</p>
           </div>
-          <button onclick="autoAssignHighChance()" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto Assign
+          <button onclick="autoAssignHighChance()" class="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> Auto Assign
           </button>
         </div>
 
-        <!-- Room Inventory Cards -->
-        <div class="overflow-y-auto max-h-[540px] custom-scrollbar mt-4 space-y-4" id="roomContainer">
-          <!-- Dynamically Populated Rooms -->
+        <div class="overflow-y-auto max-h-[560px] custom-scrollbar mt-4 space-y-3" id="roomCardsContainer">
+          <!-- Dynamically populated rooms -->
         </div>
       </div>
 
@@ -227,21 +254,21 @@
   <div id="addModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-amber-100 transform transition-all">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-slate-900">Add New Wedding Guest</h3>
+        <h3 class="text-lg font-bold text-slate-900">Add New Guest</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
-      <form id="addGuestForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+      <form id="addGuestForm" onsubmit="handleAddGuest(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guest Name</label>
-          <input type="text" id="modalGuestName" required placeholder="Full Name (e.g., Sourav, Tuku)" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+          <input type="text" id="modalGuestName" required placeholder="Full Name" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Family / Friend Side</label>
-          <select id="modalGuestGroup" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Side / Circle</label>
+          <select id="modalGuestGroup" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
             <option value="Mom side">Mom side</option>
             <option value="Dad side">Dad side</option>
             <option value="Abhinab side" selected>Abhinab side</option>
@@ -250,48 +277,115 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Attendance Probability</label>
-          <select id="modalGuestProb" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
-            <option value="High chance">High chance (95%)</option>
-            <option value="Maybe">Maybe (50%)</option>
-            <option value="Low chance">Low chance (20%)</option>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Probability</label>
+          <select id="modalGuestProb" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <option value="High chance">High chance</option>
+            <option value="Maybe">Maybe</option>
+            <option value="Low chance">Low chance</option>
           </select>
         </div>
 
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold transition">Cancel</button>
-          <button type="submit" id="modalSubmitBtn" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-sm font-bold shadow-md transition flex items-center gap-2">
-            <span>Add to Sheet</span>
-            <i class="fa-solid fa-paper-plane text-xs"></i>
+          <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">Cancel</button>
+          <button type="submit" id="modalSubmitBtn" class="px-5 py-2 bg-gradient-to-r from-amber-600 to-rose-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5">
+            <span>Add Guest</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 mt-8">
-    <p>Abhinab & Mamta's Wedding • Jorhat, Assam • Real-time synchronization active with Google Sheets</p>
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400 mt-auto">
+    Abhinab & Mamta's Wedding • Jorhat, Assam • January 2027
   </footer>
 
   <script>
-    // ==========================================
-    // BACKEND SYNC CONFIGURATION
-    // ==========================================
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby02k1YLMbqjPYI22dob2ZLcAL7dS__pC6tOdIDwn86r9WZBBu9jvyNkeW0g9rIt3lZ/exec";
+    // Embedded initial data for guaranteed zero-lag load
+    const INITIAL_GUEST_DATA = [
+      // Mom side (23)
+      { name: "Mahi", probability: "High chance", group: "Mom side" },
+      { name: "Moha", probability: "High chance", group: "Mom side" },
+      { name: "Rit", probability: "High chance", group: "Mom side" },
+      { name: "Riya", probability: "High chance", group: "Mom side" },
+      { name: "Tutu Aita", probability: "High chance", group: "Mom side" },
+      { name: "Momi mahi", probability: "High chance", group: "Mom side" },
+      { name: "Mala mahi", probability: "High chance", group: "Mom side" },
+      { name: "Bubul moha", probability: "High chance", group: "Mom side" },
+      { name: "Rish", probability: "Maybe", group: "Mom side" },
+      { name: "Rish's sister", probability: "High chance", group: "Mom side" },
+      { name: "Papu dada", probability: "High chance", group: "Mom side" },
+      { name: "Papu dada wife", probability: "High chance", group: "Mom side" },
+      { name: "Usnob dada", probability: "Maybe", group: "Mom side" },
+      { name: "Usnob's wife", probability: "Maybe", group: "Mom side" },
+      { name: "Bhai dada", probability: "Low chance", group: "Mom side" },
+      { name: "Jaan mama wife", probability: "Maybe", group: "Mom side" },
+      { name: "Jaan mama son", probability: "Maybe", group: "Mom side" },
+      { name: "Ponchi ba", probability: "Low chance", group: "Mom side" },
+      { name: "Ponchi ba husband", probability: "Low chance", group: "Mom side" },
+      { name: "Friend 1 (Mom)", probability: "High chance", group: "Mom side" },
+      { name: "Friend 2 (Mom)", probability: "High chance", group: "Mom side" },
+      { name: "Friend 3 (Mom)", probability: "High chance", group: "Mom side" },
+      { name: "Friend 4 (Mom)", probability: "High chance", group: "Mom side" },
 
-    // Application State
-    let guests = [];
-    let rooms = [];
-    let selectedGroupFilter = 'All';
-    let selectedProbFilter = 'All';
+      // Dad side (16)
+      { name: "Ranu pehi", probability: "High chance", group: "Dad side" },
+      { name: "Ranu peha", probability: "High chance", group: "Dad side" },
+      { name: "Chirag", probability: "Maybe", group: "Dad side" },
+      { name: "Nikita", probability: "Maybe", group: "Dad side" },
+      { name: "Moina jetia", probability: "High chance", group: "Dad side" },
+      { name: "Maina ba", probability: "Maybe", group: "Dad side" },
+      { name: "Maina ba husband", probability: "Maybe", group: "Dad side" },
+      { name: "Dhubri dada", probability: "High chance", group: "Dad side" },
+      { name: "Duhubri dada wife", probability: "High chance", group: "Dad side" },
+      { name: "Dhubri dada daughter", probability: "High chance", group: "Dad side" },
+      { name: "Raju khura", probability: "High chance", group: "Dad side" },
+      { name: "Khuri", probability: "High chance", group: "Dad side" },
+      { name: "Bumon", probability: "High chance", group: "Dad side" },
+      { name: "Barasha ba", probability: "Low chance", group: "Dad side" },
+      { name: "Barasha ba husband", probability: "Low chance", group: "Dad side" },
+      { name: "Barasha ba daughter", probability: "Low chance", group: "Dad side" },
 
-    // Chart References
-    let probChartRef = null;
-    let groupChartRef = null;
-    let capacityChartRef = null;
+      // Abhinab side (29)
+      { name: "Soujanya", probability: "High chance", group: "Abhinab side" },
+      { name: "Abhishek", probability: "High chance", group: "Abhinab side" },
+      { name: "Soujanya sister", probability: "High chance", group: "Abhinab side" },
+      { name: "Soujany's bhindo", probability: "High chance", group: "Abhinab side" },
+      { name: "Abhishek's sister 1", probability: "High chance", group: "Abhinab side" },
+      { name: "Abhishek's sister 2", probability: "High chance", group: "Abhinab side" },
+      { name: "Abhishek's bhindo", probability: "High chance", group: "Abhinab side" },
+      { name: "Dhiraj", probability: "High chance", group: "Abhinab side" },
+      { name: "Rohan", probability: "High chance", group: "Abhinab side" },
+      { name: "Amar", probability: "High chance", group: "Abhinab side" },
+      { name: "Sourav", probability: "High chance", group: "Abhinab side" },
+      { name: "Patna", probability: "Low chance", group: "Abhinab side" },
+      { name: "Sonu", probability: "Low chance", group: "Abhinab side" },
+      { name: "Abhijit", probability: "Maybe", group: "Abhinab side" },
+      { name: "Sid", probability: "Low chance", group: "Abhinab side" },
+      { name: "Rupam", probability: "Maybe", group: "Abhinab side" },
+      { name: "Gitashree", probability: "Low chance", group: "Abhinab side" },
+      { name: "Ayush", probability: "High chance", group: "Abhinab side" },
+      { name: "Debashree", probability: "Maybe", group: "Abhinab side" },
+      { name: "Sonali", probability: "High chance", group: "Abhinab side" },
+      { name: "Subro", probability: "High chance", group: "Abhinab side" },
+      { name: "Nilutpal", probability: "Maybe", group: "Abhinab side" },
+      { name: "Suraj", probability: "Maybe", group: "Abhinab side" },
+      { name: "Tuku", probability: "High chance", group: "Abhinab side" },
+      { name: "Vasu", probability: "High chance", group: "Abhinab side" },
+      { name: "Vasudha", probability: "Maybe", group: "Abhinab side" },
+      { name: "Gomes", probability: "High chance", group: "Abhinab side" },
+      { name: "Monish da", probability: "Low chance", group: "Abhinab side" },
+      { name: "Debu", probability: "High chance", group: "Abhinab side" },
 
-    // Default Fallback Room structure if Sheet2 is not returned
-    const defaultRooms = [
+      // Babli side (4)
+      { name: "Bhupali", probability: "High chance", group: "Babli side" },
+      { name: "Friend 1 (Babli)", probability: "Maybe", group: "Babli side" },
+      { name: "Friend 2 (Babli)", probability: "Maybe", group: "Babli side" },
+      { name: "Friend 3 (Babli)", probability: "Low chance", group: "Babli side" }
+    ];
+
+    const INITIAL_ROOM_DATA = [
       { id: "b1", hotel: "Bononi", name: "Room 1", capacity: 1, assigned: [] },
       { id: "b5", hotel: "Bononi", name: "Room 5", capacity: 2, assigned: [] },
       { id: "b6", hotel: "Bononi", name: "Room 6", capacity: 3, assigned: [] },
@@ -299,151 +393,72 @@
       { id: "b10", hotel: "Bononi", name: "Room 10", capacity: 1, assigned: [] },
       { id: "b12", hotel: "Bononi", name: "Room 12", capacity: 2, assigned: [] },
       { id: "bdorm", hotel: "Bononi", name: "Dormitory bed", capacity: 1, assigned: [] },
-      { id: "b2bhk", hotel: "Bononi", name: "2BHK Unit", capacity: 4, assigned: [] },
-      { id: "c1", hotel: "Clubway Grand", name: "Exec Room 1", capacity: 2, assigned: [] },
-      { id: "c2", hotel: "Clubway Grand", name: "Exec Room 2", capacity: 2, assigned: [] },
-      { id: "c3", hotel: "Clubway Grand", name: "Exec Room 3", capacity: 2, assigned: [] },
-      { id: "c4", hotel: "Clubway Grand", name: "Exec Room 4", capacity: 2, assigned: [] },
-      { id: "c5", hotel: "Clubway Grand", name: "Exec Room 5", capacity: 2, assigned: [] },
-      { id: "c6", hotel: "Clubway Grand", name: "Exec Room 6", capacity: 2, assigned: [] },
-      { id: "c7", hotel: "Clubway Grand", name: "Exec Room 7", capacity: 2, assigned: [] }
+      { id: "b2bhk", hotel: "Bononi", name: "2BHK Suite", capacity: 4, assigned: [] },
+      { id: "c1", hotel: "Clubway Grand", name: "Executive Room 1", capacity: 2, assigned: [] },
+      { id: "c2", hotel: "Clubway Grand", name: "Executive Room 2", capacity: 2, assigned: [] },
+      { id: "c3", hotel: "Clubway Grand", name: "Executive Room 3", capacity: 2, assigned: [] },
+      { id: "c4", hotel: "Clubway Grand", name: "Executive Room 4", capacity: 2, assigned: [] },
+      { id: "c5", hotel: "Clubway Grand", name: "Executive Room 5", capacity: 2, assigned: [] },
+      { id: "c6", hotel: "Clubway Grand", name: "Executive Room 6", capacity: 2, assigned: [] },
+      { id: "c7", hotel: "Clubway Grand", name: "Executive Room 7", capacity: 2, assigned: [] }
     ];
 
-    // ==========================================
-    // INITIALIZATION & LIVE SHEET FETCH
-    // ==========================================
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby02k1YLMbqjPYI22dob2ZLcAL7dS__pC6tOdIDwn86r9WZBBu9jvyNkeW0g9rIt3lZ/exec";
+
+    let guests = JSON.parse(JSON.stringify(INITIAL_GUEST_DATA));
+    let rooms = JSON.parse(JSON.stringify(INITIAL_ROOM_DATA));
+    let currentFilterGroup = "All";
+    let currentFilterProb = "All";
+
+    let probChart = null;
+    let groupChart = null;
+    let capacityChart = null;
+
     window.addEventListener("DOMContentLoaded", () => {
-      rooms = JSON.parse(JSON.stringify(defaultRooms));
-      fetchSheetData();
+      refreshAll();
+      syncWithGoogleSheet();
     });
 
-    async function fetchSheetData() {
-      const syncStatus = document.getElementById("syncStatus");
-      const refreshIcon = document.getElementById("refreshIcon");
-      if (refreshIcon) refreshIcon.classList.add("fa-spin");
-
-      syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Syncing with Sheet...`;
+    async function syncWithGoogleSheet() {
+      const badge = document.getElementById("syncStatusBadge");
+      const icon = document.getElementById("refreshIcon");
+      if (icon) icon.classList.add("fa-spin");
 
       try {
         const response = await fetch(APPS_SCRIPT_URL);
         const data = await response.json();
-
         if (data.status === "success" && data.guests && data.guests.length > 0) {
           guests = data.guests;
-
-          if (data.rooms && data.rooms.length > 0) {
-            rooms = data.rooms.map(r => ({
-              ...r,
-              assigned: []
-            }));
-          }
-
-          syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Live Synced`;
-        } else {
-          throw new Error("Invalid response format");
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Live Synced with Sheet`;
+          refreshAll();
         }
-      } catch (err) {
-        console.warn("Could not retrieve live data from Google Sheet, checking offline cache.", err);
-        syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-400"></span> Offline Mode`;
+      } catch (e) {
+        console.log("Sheet sync idle, utilizing loaded data.");
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Ready (${guests.length} Guests)`;
       } finally {
-        if (refreshIcon) refreshIcon.classList.remove("fa-spin");
-        updateAllViews();
+        if (icon) icon.classList.remove("fa-spin");
       }
     }
 
-    // ==========================================
-    // WRITE OPERATIONS TO GOOGLE SHEET
-    // ==========================================
-    async function handleFormSubmit(e) {
-      e.preventDefault();
-      const name = document.getElementById("modalGuestName").value.trim();
-      const group = document.getElementById("modalGuestGroup").value;
-      const probability = document.getElementById("modalGuestProb").value;
-      const submitBtn = document.getElementById("modalSubmitBtn");
-
-      if (!name) return;
-
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
-
-      // 1. Optimistic UI update
-      const newGuest = {
-        id: "local_" + Date.now(),
-        name: name,
-        group: group,
-        probability: probability
-      };
-      guests.push(newGuest);
-      updateAllViews();
-      closeModal();
-
-      // 2. Transmit to Google Apps Script
-      try {
-        await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "ADD_GUEST",
-            name: name,
-            group: group,
-            probability: probability
-          })
-        });
-      } catch (err) {
-        console.error("Failed to append to Google Sheet:", err);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `<span>Add to Sheet</span> <i class="fa-solid fa-paper-plane text-xs"></i>`;
-        document.getElementById("addGuestForm").reset();
-      }
-    }
-
-    async function changeGuestProbability(name, newProb) {
-      const g = guests.find(item => item.name === name);
-      if (g) {
-        g.probability = newProb;
-        updateAllViews();
-
-        try {
-          await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "UPDATE_PROBABILITY",
-              name: name,
-              probability: newProb
-            })
-          });
-        } catch (err) {
-          console.error("Failed to update probability in Sheet:", err);
-        }
-      }
-    }
-
-    // ==========================================
-    // UI RENDERING & CHARTS
-    // ==========================================
-    function updateAllViews() {
-      renderKPIs();
+    function refreshAll() {
+      updateKPIs();
       renderCharts();
-      renderGuestTable();
+      renderTable();
       renderRooms();
     }
 
-    function renderKPIs() {
+    function updateKPIs() {
       const total = guests.length;
       const high = guests.filter(g => g.probability.toLowerCase().includes("high")).length;
       const maybe = guests.filter(g => g.probability.toLowerCase().includes("maybe")).length;
       const low = guests.filter(g => g.probability.toLowerCase().includes("low")).length;
       const forecast = Math.round((high * 0.95) + (maybe * 0.50) + (low * 0.20));
 
-      document.getElementById("statTotal").innerText = total;
-      document.getElementById("statHigh").innerText = high;
-      document.getElementById("statMaybe").innerText = maybe;
-      document.getElementById("statLow").innerText = low;
-      document.getElementById("statForecast").innerText = forecast;
+      document.getElementById("kpiTotal").innerText = total;
+      document.getElementById("kpiHigh").innerText = high;
+      document.getElementById("kpiMaybe").innerText = maybe;
+      document.getElementById("kpiLow").innerText = low;
+      document.getElementById("kpiForecast").innerText = forecast;
     }
 
     function renderCharts() {
@@ -451,44 +466,43 @@
       const maybe = guests.filter(g => g.probability.toLowerCase().includes("maybe")).length;
       const low = guests.filter(g => g.probability.toLowerCase().includes("low")).length;
 
-      // 1. Doughnut Chart: Probabilities
-      const ctxProb = document.getElementById("probChart").getContext("2d");
-      if (probChartRef) probChartRef.destroy();
-      probChartRef = new Chart(ctxProb, {
-        type: "doughnut",
+      // Probability Chart
+      const pCtx = document.getElementById("probChart").getContext("2d");
+      if (probChart) probChart.destroy();
+      probChart = new Chart(pCtx, {
+        type: 'doughnut',
         data: {
-          labels: ["High Chance", "Maybe", "Low Chance"],
+          labels: ['High Chance', 'Maybe', 'Low Chance'],
           datasets: [{
             data: [high, maybe, low],
-            backgroundColor: ["#10b981", "#f59e0b", "#f43f5e"],
+            backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
             borderWidth: 2,
-            borderColor: "#ffffff"
+            borderColor: '#ffffff'
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { position: "bottom" } }
+          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
         }
       });
 
-      // 2. Bar Chart: Groups
+      // Group Chart
       const mom = guests.filter(g => g.group.toLowerCase().includes("mom")).length;
       const dad = guests.filter(g => g.group.toLowerCase().includes("dad")).length;
       const abhinab = guests.filter(g => g.group.toLowerCase().includes("abhinab")).length;
       const babli = guests.filter(g => g.group.toLowerCase().includes("babli")).length;
 
-      const ctxGroup = document.getElementById("groupChart").getContext("2d");
-      if (groupChartRef) groupChartRef.destroy();
-      groupChartRef = new Chart(ctxGroup, {
-        type: "bar",
+      const gCtx = document.getElementById("groupChart").getContext("2d");
+      if (groupChart) groupChart.destroy();
+      groupChart = new Chart(gCtx, {
+        type: 'bar',
         data: {
           labels: ["Mom's", "Dad's", "Abhinab's", "Babli's"],
           datasets: [{
-            label: "Guests",
             data: [mom, dad, abhinab, babli],
-            backgroundColor: ["#8b5cf6", "#3b82f6", "#d97706", "#ec4899"],
-            borderRadius: 6
+            backgroundColor: ['#8b5cf6', '#3b82f6', '#d97706', '#ec4899'],
+            borderRadius: 8
           }]
         },
         options: {
@@ -499,20 +513,20 @@
         }
       });
 
-      // 3. Bar Chart: Capacity vs Turnout
+      // Capacity Chart
       const totalBeds = rooms.reduce((sum, r) => sum + r.capacity, 0);
       const forecast = Math.round((high * 0.95) + (maybe * 0.50) + (low * 0.20));
 
-      const ctxCap = document.getElementById("capacityChart").getContext("2d");
-      if (capacityChartRef) capacityChartRef.destroy();
-      capacityChartRef = new Chart(ctxCap, {
-        type: "bar",
+      const cCtx = document.getElementById("capacityChart").getContext("2d");
+      if (capacityChart) capacityChart.destroy();
+      capacityChart = new Chart(cCtx, {
+        type: 'bar',
         data: {
-          labels: ["Booked Beds", "High Only", "Expected", "Max (All)"],
+          labels: ['Total Beds', 'High Only', 'Forecast', 'Total List'],
           datasets: [{
             data: [totalBeds, high, forecast, guests.length],
-            backgroundColor: ["#0284c7", "#10b981", "#7c3aed", "#e11d48"],
-            borderRadius: 6
+            backgroundColor: ['#0284c7', '#10b981', '#7c3aed', '#e11d48'],
+            borderRadius: 8
           }]
         },
         options: {
@@ -524,36 +538,36 @@
       });
     }
 
-    function renderGuestTable() {
+    function renderTable() {
       const search = document.getElementById("searchInput").value.toLowerCase();
       const tbody = document.getElementById("guestTableBody");
       tbody.innerHTML = "";
 
       const filtered = guests.filter(g => {
         const matchesSearch = g.name.toLowerCase().includes(search);
-        const matchesGroup = (selectedGroupFilter === 'All') || (g.group.toLowerCase() === selectedGroupFilter.toLowerCase());
-        const matchesProb = (selectedProbFilter === 'All') || (g.probability.toLowerCase() === selectedProbFilter.toLowerCase());
+        const matchesGroup = (currentFilterGroup === 'All') || (g.group.toLowerCase() === currentFilterGroup.toLowerCase());
+        const matchesProb = (currentFilterProb === 'All') || (g.probability.toLowerCase() === currentFilterProb.toLowerCase());
         return matchesSearch && matchesGroup && matchesProb;
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 text-slate-400 text-xs">No guests found matching filters.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 text-slate-400 text-xs">No guests found.</td></tr>`;
         return;
       }
 
       filtered.forEach(g => {
-        let badgeClass = "bg-slate-100 text-slate-700";
-        if (g.probability.toLowerCase().includes("high")) badgeClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
-        else if (g.probability.toLowerCase().includes("maybe")) badgeClass = "bg-amber-50 text-amber-700 border border-amber-200";
-        else if (g.probability.toLowerCase().includes("low")) badgeClass = "bg-rose-50 text-rose-700 border border-rose-200";
+        let badgeColor = "bg-slate-100 text-slate-700";
+        if (g.probability.toLowerCase().includes("high")) badgeColor = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+        else if (g.probability.toLowerCase().includes("maybe")) badgeColor = "bg-amber-50 text-amber-700 border border-amber-200";
+        else if (g.probability.toLowerCase().includes("low")) badgeColor = "bg-rose-50 text-rose-700 border border-rose-200";
 
         const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50/70 transition";
+        tr.className = "bg-slate-50/60 hover:bg-amber-50/50 transition rounded-xl";
         tr.innerHTML = `
-          <td class="py-2.5 px-3 font-semibold text-slate-800">${g.name}</td>
-          <td class="py-2.5 px-3 text-xs text-slate-500">${g.group}</td>
+          <td class="py-2.5 px-3 font-semibold text-slate-800 text-xs sm:text-sm">${g.name}</td>
+          <td class="py-2.5 px-3 text-xs text-slate-500 font-medium">${g.group}</td>
           <td class="py-2.5 px-3">
-            <select onchange="changeGuestProbability('${g.name}', this.value)" class="text-xs font-semibold px-2 py-1 rounded-md ${badgeClass} cursor-pointer focus:outline-none">
+            <select onchange="updateGuestChance('${g.name}', this.value)" class="text-xs font-semibold px-2.5 py-1 rounded-lg ${badgeColor} cursor-pointer focus:outline-none shadow-sm">
               <option value="High chance" ${g.probability.toLowerCase().includes("high") ? "selected" : ""}>High chance</option>
               <option value="Maybe" ${g.probability.toLowerCase().includes("maybe") ? "selected" : ""}>Maybe</option>
               <option value="Low chance" ${g.probability.toLowerCase().includes("low") ? "selected" : ""}>Low chance</option>
@@ -565,7 +579,7 @@
     }
 
     function renderRooms() {
-      const container = document.getElementById("roomContainer");
+      const container = document.getElementById("roomCardsContainer");
       container.innerHTML = "";
 
       rooms.forEach((r, idx) => {
@@ -573,28 +587,30 @@
         const isFull = assignedCount >= r.capacity;
 
         const card = document.createElement("div");
-        card.className = `p-4 rounded-xl border ${isFull ? 'bg-slate-50/70 border-slate-200' : 'bg-white border-amber-100 shadow-sm'}`;
+        card.className = `p-4 rounded-xl border transition ${isFull ? 'bg-slate-50/80 border-slate-200' : 'bg-white border-amber-100 shadow-sm'}`;
         card.innerHTML = `
           <div class="flex justify-between items-center mb-2">
             <div>
-              <span class="text-xs font-semibold uppercase text-amber-700">${r.hotel}</span>
-              <h4 class="font-bold text-slate-800 text-sm">${r.name}</h4>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700">${r.hotel}</span>
+              <h4 class="font-bold text-slate-800 text-xs sm:text-sm">${r.name}</h4>
             </div>
-            <span class="text-xs font-extrabold px-2 py-0.5 rounded-full ${isFull ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full ${isFull ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
               ${assignedCount} / ${r.capacity} Beds
             </span>
           </div>
-          <div class="flex flex-wrap gap-1.5 mt-2 min-h-[28px]">
+
+          <div class="flex flex-wrap items-center gap-1.5 mt-2 min-h-[30px]">
             ${r.assigned.map((guestName, gIdx) => `
-              <span class="inline-flex items-center gap-1 text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
+              <span class="inline-flex items-center gap-1.5 text-xs bg-slate-100 text-slate-700 font-medium px-2 py-0.5 rounded-md border border-slate-200">
                 ${guestName}
-                <button onclick="removeGuestFromRoom(${idx}, ${gIdx})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="removeGuestFromRoom(${idx}, ${gIdx})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-xmark text-[10px]"></i></button>
               </span>
             `).join('')}
+
             ${!isFull ? `
-              <select onchange="assignGuestToRoom(${idx}, this.value); this.value='';" class="text-xs bg-slate-50 border border-dashed border-slate-300 text-slate-500 rounded px-2 py-0.5 focus:outline-none">
+              <select onchange="assignGuestToRoom(${idx}, this.value); this.value='';" class="text-xs bg-slate-50 border border-dashed border-slate-300 text-slate-500 rounded-md px-2 py-1 focus:outline-none">
                 <option value="">+ Assign Guest</option>
-                ${guests.filter(g => !isGuestAssigned(g.name)).map(g => `<option value="${g.name}">${g.name} (${g.probability})</option>`).join('')}
+                ${guests.filter(g => !isGuestAssigned(g.name)).map(g => `<option value="${g.name}">${g.name} (${g.group})</option>`).join('')}
               </select>
             ` : ''}
           </div>
@@ -621,61 +637,91 @@
     }
 
     function autoAssignHighChance() {
-      // Clear current assignments
       rooms.forEach(r => r.assigned = []);
-
       const highGuests = guests.filter(g => g.probability.toLowerCase().includes("high"));
-      let guestPointer = 0;
-
+      let ptr = 0;
       for (let r of rooms) {
-        while (r.assigned.length < r.capacity && guestPointer < highGuests.length) {
-          r.assigned.push(highGuests[guestPointer].name);
-          guestPointer++;
+        while (r.assigned.length < r.capacity && ptr < highGuests.length) {
+          r.assigned.push(highGuests[ptr].name);
+          ptr++;
         }
       }
       renderRooms();
     }
 
-    // ==========================================
-    // FILTERING LOGIC
-    // ==========================================
-    function setGroupFilter(group) {
-      selectedGroupFilter = group;
+    function updateGuestChance(name, newProb) {
+      const g = guests.find(item => item.name === name);
+      if (g) {
+        g.probability = newProb;
+        refreshAll();
+
+        // Background update to Google Apps Script
+        fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "UPDATE_PROBABILITY",
+            name: name,
+            probability: newProb
+          })
+        }).catch(e => console.log("Background write queued."));
+      }
+    }
+
+    function handleAddGuest(e) {
+      e.preventDefault();
+      const name = document.getElementById("modalGuestName").value.trim();
+      const group = document.getElementById("modalGuestGroup").value;
+      const prob = document.getElementById("modalGuestProb").value;
+
+      if (!name) return;
+
+      guests.push({ name, group, probability: prob });
+      refreshAll();
+      closeModal();
+
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "ADD_GUEST",
+          name: name,
+          group: group,
+          probability: prob
+        })
+      }).catch(e => console.log("Background write queued."));
+
+      document.getElementById("addGuestForm").reset();
+    }
+
+    function setFilterGroup(group) {
+      currentFilterGroup = group;
       document.querySelectorAll('.group-btn').forEach(b => {
-        b.classList.remove('bg-amber-900', 'text-white');
+        b.classList.remove('bg-amber-900', 'text-white', 'shadow-sm');
         b.classList.add('bg-slate-100', 'text-slate-700');
         if (b.dataset.group === group) {
           b.classList.remove('bg-slate-100', 'text-slate-700');
-          b.classList.add('bg-amber-900', 'text-white');
+          b.classList.add('bg-amber-900', 'text-white', 'shadow-sm');
         }
       });
-      renderGuestTable();
+      renderTable();
     }
 
-    function setProbFilter(prob) {
-      selectedProbFilter = prob;
+    function setFilterProb(prob) {
+      currentFilterProb = prob;
       document.querySelectorAll('.prob-btn').forEach(b => {
         b.classList.remove('bg-slate-800', 'text-white');
-        b.classList.add('bg-slate-100', 'text-slate-700');
         if (b.dataset.prob === prob) {
-          b.classList.remove('bg-slate-100', 'text-slate-700');
           b.classList.add('bg-slate-800', 'text-white');
         }
       });
-      renderGuestTable();
+      renderTable();
     }
 
-    function filterRoster() {
-      renderGuestTable();
-    }
-
-    // Modal Visibility
-    function openModal() {
-      document.getElementById("addModal").classList.remove("hidden");
-    }
-    function closeModal() {
-      document.getElementById("addModal").classList.add("hidden");
-    }
+    function openModal() { document.getElementById("addModal").classList.remove("hidden"); }
+    function closeModal() { document.getElementById("addModal").classList.add("hidden"); }
   </script>
 </body>
 </html>
